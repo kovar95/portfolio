@@ -1,0 +1,26 @@
+---
+import styles from './Section.module.css';
+
+interface Props {
+  id: string;
+  index: string;
+  heading: string;
+  subtitle?: string;
+}
+
+const { id, index, heading, subtitle } = Astro.props;
+---
+
+<section class={styles.section} id={id} aria-labelledby={`${id}-heading`}>
+  <div class="shell">
+    <header class={`${styles.head} reveal`}>
+      <span class={styles.index}>{index}</span>
+      <h2 class={styles.title} id={`${id}-heading`}>{heading}</h2>
+      <span class={styles.rule} aria-hidden="true"></span>
+    </header>
+
+    {subtitle && <p class={`${styles.subtitle} reveal`}>{subtitle}</p>}
+
+    <slot />
+  </div>
+</section>

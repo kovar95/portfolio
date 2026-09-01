@@ -1,0 +1,61 @@
+---
+import Section from './Section.astro';
+import styles from './Contact.module.css';
+import { useContent, PROFILE, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const c = t.contact;
+
+const channels = [
+  { label: c.emailLabel, value: PROFILE.email, href: `mailto:${PROFILE.email}`, external: false },
+  { label: c.phoneLabel, value: PROFILE.phone, href: `tel:${PROFILE.phoneHref}`, external: false },
+  { label: c.githubLabel, value: PROFILE.githubHandle, href: PROFILE.github, external: true },
+  { label: c.linkedinLabel, value: PROFILE.linkedinHandle, href: PROFILE.linkedin, external: true },
+];
+---
+
+<Section id="contact" index={c.index} heading={c.heading}>
+  <div class={`${styles.panel} reveal`}>
+    <div class={styles.copy}>
+      <h3 class={styles.title}>{c.title}</h3>
+      <p class={styles.body}>{c.body}</p>
+
+      <div class={styles.ctaRow}>
+        <a class={`${styles.btn} ${styles.btnPrimary}`} href={`mailto:${PROFILE.email}`}>
+          {c.cta}
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class={`${styles.btn} ${styles.btnGhost}`} href={PROFILE.cv} download>
+          {c.cvCta}
+          <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+    </div>
+
+    <ul class={styles.channels}>
+      {
+        channels.map((channel) => (
+          <li>
+            <a
+              class={styles.channel}
+              href={channel.href}
+              target={channel.external ? '_blank' : undefined}
+              rel={channel.external ? 'noopener noreferrer' : undefined}
+            >
+              <span class={styles.channelLabel}>{channel.label}</span>
+              <span class={styles.channelValue}>
+                {channel.value}
+                <span class={styles.channelArrow} aria-hidden="true">↗</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</Section>

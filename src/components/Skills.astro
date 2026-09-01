@@ -1,0 +1,28 @@
+---
+import Section from './Section.astro';
+import styles from './Skills.module.css';
+import { useContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const s = t.skills;
+---
+
+<Section id="stack" index={s.index} heading={s.heading} subtitle={s.subtitle}>
+  <div class={styles.grid}>
+    {
+      s.groups.map((group) => (
+        <div class={`${styles.group} reveal`}>
+          <h3 class={styles.label}>{group.label}</h3>
+          <ul class={styles.items}>
+            {group.items.map((item) => <li class={styles.item}>{item}</li>)}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</Section>

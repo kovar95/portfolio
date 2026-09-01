@@ -1,0 +1,62 @@
+---
+import Section from './Section.astro';
+import styles from './About.module.css';
+import { useContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const a = t.about;
+---
+
+<Section id="about" index={a.index} heading={a.heading}>
+  <div class={styles.layout}>
+    <div class={`${styles.body} reveal`}>
+      {a.body.map((paragraph) => <p>{paragraph}</p>)}
+
+      <ul class={styles.stats}>
+        {
+          a.stats.map((stat) => (
+            <li class={styles.stat}>
+              <span class={styles.statValue}>{stat.value}</span>
+              <span class={styles.statLabel}>{stat.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class={`${styles.aside} reveal`}>
+      <div class={styles.card}>
+        <h3 class={styles.cardHeading}>{a.languagesHeading}</h3>
+        <div class={styles.langList}>
+          {
+            a.languages.map((language) => (
+              <div class={styles.langRow}>
+                <span>
+                  <span class={styles.langName}>{language.name}</span>
+                  <span class={styles.langLevel}>{language.level}</span>
+                </span>
+                <span class={styles.dots} aria-hidden="true">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <span class={i < language.dots ? styles.dotOn : styles.dotOff}></span>
+                  ))}
+                </span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class={styles.card}>
+        <h3 class={styles.cardHeading}>{a.asideHeading}</h3>
+        <ul class={styles.hobbies}>
+          {a.hobbies.map((hobby) => <li class={styles.hobby}>{hobby}</li>)}
+        </ul>
+      </div>
+    </div>
+  </div>
+</Section>

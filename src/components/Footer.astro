@@ -1,0 +1,30 @@
+---
+import styles from './Footer.module.css';
+import { useContent, PROFILE, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class={styles.footer}>
+  <div class={`shell ${styles.inner}`}>
+    <span>
+      © {year} <span class={styles.name}>{PROFILE.name}</span> · {t.footer.rights}
+    </span>
+
+    <span class={styles.built}>
+      <span class={styles.spark} aria-hidden="true">◆</span>
+      {t.footer.built}
+    </span>
+
+    <a class={styles.top} href="#main">
+      <span aria-hidden="true">↑</span>
+      {t.footer.top}
+    </a>
+  </div>
+</footer>

@@ -1,0 +1,185 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
+import '../styles/global.css';
+
+/* Preload only the subsets a page actually renders, so the requests start at
+   parse time instead of after the stylesheet is processed.
+   latin-ext is required on both locales: the h1 contains "KOVARBAŠIĆ". */
+import monoLatin from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
+import monoLatinExt from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-ext-wght-normal.woff2?url';
+import sansLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import sansLatinExt from '@fontsource-variable/inter/files/inter-latin-ext-wght-normal.woff2?url';
+import styles from './Layout.module.css';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { useContent, PROFILE, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const htmlLang = lang === 'sr' ? 'sr-RS' : 'en';
+const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : null);
+const canonical = abs(Astro.url.pathname) ?? Astro.url.pathname;
+const ogImage = abs('og.png');
+
+/** hreflang requires fully-qualified URLs, so skip them if `site` is unset. */
+const alternates = Astro.site
+  ? [
+      { hreflang: 'en', href: abs('/')! },
+      { hreflang: 'sr-RS', href: abs('/sr/')! },
+      { hreflang: 'x-default', href: abs('/')! },
+    ]
+  : [];
+---
+
+<!doctype html>
+<html lang={htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <meta name="author" content={PROFILE.name} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {
+      /* Serbian body copy needs Inter's latin-ext (š ć č ž đ); English does not. */
+      [monoLatin, monoLatinExt, sansLatin, ...(lang === 'sr' ? [sansLatinExt] : [])].map((href) => (
+        <link rel="preload" href={href} as="font" type="font/woff2" crossorigin="anonymous" />
+      ))
+    }
+    <link rel="canonical" href={canonical} />
+    {
+      alternates.map((alt) => (
+        <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+      ))
+    }
+    <meta name="theme-color" content="#08090c" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:locale" content={lang === 'sr' ? 'sr_RS' : 'en_US'} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={PROFILE.name} />
+    {
+      ogImage && (
+        <>
+          <meta property="og:image" content={ogImage} />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta property="og:image:alt" content={t.meta.ogAlt} />
+        </>
+      )
+    }
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={t.meta.title} />
+    <meta name="twitter:description" content={t.meta.description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: PROFILE.name,
+        jobTitle: 'Frontend Developer',
+        email: `mailto:${PROFILE.email}`,
+        telephone: PROFILE.phoneHref,
+        url: canonical,
+        sameAs: [PROFILE.github, PROFILE.linkedin],
+        address: { '@type': 'PostalAddress', addressLocality: 'Belgrade', addressCountry: 'RS' },
+        knowsAbout: ['React', 'TypeScript', 'Astro', 'GraphQL', 'Node.js'],
+      })}
+    />
+
+    <script is:inline>
+      /* Only opt into JS-driven reveals when the browser can actually finish the
+         job — otherwise the content must stay visible. */
+      if (
+        'IntersectionObserver' in window &&
+        'noModule' in HTMLScriptElement.prototype &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ) {
+        document.documentElement.classList.add('js');
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">{t.nav.skip}</a>
+    <Header lang={lang} />
+    <main id="main" class={styles.main}>
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <script>
+      const revealables = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+      const reveal = (el: Element) => el.classList.add('is-visible');
+
+      /* Anything already intersecting the viewport must be shown, even if the
+         observer's margin never reports it (tall viewport, short page, or a
+         deep link that lands past the trigger line).
+         Reads are batched before writes so this never forces a reflow. */
+      let queued = false;
+      const revealInView = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+          queued = false;
+          const pending = revealables.filter((el) => !el.classList.contains('is-visible'));
+          if (!pending.length) {
+            stopWatching();
+            return;
+          }
+          const height = window.innerHeight;
+          const rects = pending.map((el) => el.getBoundingClientRect());
+          pending.forEach((el, i) => {
+            if (rects[i].top < height && rects[i].bottom > 0) reveal(el);
+          });
+        });
+      };
+
+      const onScroll = () => {
+        const atBottom =
+          window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
+        if (atBottom) revealInView();
+      };
+
+      const stopWatching = () => {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', revealInView);
+      };
+
+      try {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              reveal(entry.target);
+              observer.unobserve(entry.target);
+            });
+          },
+          /* A fixed offset, not a percentage — a percentage of a tall viewport
+             can swallow a whole section. */
+          { rootMargin: '0px 0px -60px 0px', threshold: 0.05 },
+        );
+
+        revealables.forEach((el) => observer.observe(el));
+
+        window.addEventListener('load', revealInView);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', revealInView, { passive: true });
+      } catch {
+        revealables.forEach(reveal);
+      }
+    </script>
+  </body>
+</html>

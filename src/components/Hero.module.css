@@ -1,0 +1,384 @@
+.hero {
+  position: relative;
+  padding-block: clamp(3.5rem, 10vw, 6.5rem) clamp(4rem, 10vw, 7rem);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4rem);
+  align-items: center;
+}
+
+/* Grid items default to min-width:auto, which lets the <pre> below force the
+   whole page wider than the viewport. Allow them to shrink and scroll instead. */
+.grid > * {
+  min-width: 0;
+}
+
+/* ── left column ──────────────────────────────────────── */
+.prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+.promptUser {
+  color: var(--accent);
+}
+
+.promptCmd {
+  color: var(--text-dim);
+}
+
+.cursor {
+  display: inline-block;
+  width: 7px;
+  height: 1em;
+  background: var(--accent);
+  animation: blink 1.15s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(2.35rem, 8.5vw, 4.15rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+.nameSecond {
+  display: block;
+  color: var(--text-faint);
+}
+
+.roleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+  margin-top: 1.4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+}
+
+.role {
+  color: var(--accent);
+}
+
+.dot {
+  color: var(--border-strong);
+}
+
+.location {
+  color: var(--text-dim);
+}
+
+.tagline {
+  max-width: 34rem;
+  margin-top: 1.35rem;
+  color: var(--text-dim);
+  font-size: 1.03rem;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.6rem;
+  padding: 0.4rem 0.85rem 0.4rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.pulse {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.pulse::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  opacity: 0;
+  animation: ping 2.2s var(--ease) infinite;
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  70%,
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  transition:
+    transform 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    border-color 0.22s var(--ease),
+    background-color 0.22s var(--ease),
+    color 0.22s var(--ease);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btnPrimary {
+  background: var(--accent);
+  color: #04120f;
+  font-weight: 600;
+  box-shadow: 0 6px 22px -8px rgba(94, 234, 212, 0.6);
+}
+
+.btnPrimary:hover {
+  background: #7df3e0;
+  box-shadow: 0 12px 30px -10px rgba(94, 234, 212, 0.75);
+}
+
+.btnGhost {
+  border-color: var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.btnGhost:hover {
+  border-color: var(--accent-deep);
+  color: var(--accent);
+}
+
+.arrow {
+  transition: transform 0.22s var(--ease);
+}
+
+.btn:hover .arrow {
+  transform: translateX(3px);
+}
+
+/* ── right column: code window ────────────────────────── */
+.window {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg-soft) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 24px 60px -30px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+}
+
+.windowBar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.lights {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.light {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+.light:first-child {
+  background: #3d4557;
+}
+
+.fileName {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+.code {
+  margin: 0;
+  padding: 1.35rem 1.4rem 1.5rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: clamp(0.76rem, 1.9vw, 0.84rem);
+  line-height: 1.85;
+  tab-size: 2;
+}
+
+.ln {
+  display: block;
+  white-space: pre;
+}
+
+.kw {
+  color: #c792ea;
+}
+.var {
+  color: #82aaff;
+}
+.key {
+  color: #7fd1e8;
+}
+.str {
+  color: var(--accent);
+}
+.num {
+  color: #f2b880;
+}
+.pn {
+  color: var(--text-faint);
+}
+.cmt {
+  color: #55607a;
+  font-style: italic;
+}
+
+.windowFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-faint);
+}
+
+.footTag {
+  color: var(--accent);
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: center;
+  }
+}
+
+.scrollHint {
+  display: none;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: clamp(3rem, 7vw, 4.5rem);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.scrollLine {
+  display: block;
+  width: 1px;
+  height: 2.4rem;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2.4s var(--ease) infinite;
+}
+
+@media (min-width: 900px) {
+  .scrollHint {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+  }
+}
+
+@keyframes scrollPulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scaleY(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* ── entrance: CSS only, so the hero never depends on JS ──── */
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro > * {
+    animation: heroRise 0.8s var(--ease) both;
+  }
+
+  .intro > *:nth-child(1) {
+    animation-delay: 0.04s;
+  }
+  .intro > *:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  .intro > *:nth-child(3) {
+    animation-delay: 0.16s;
+  }
+  .intro > *:nth-child(4) {
+    animation-delay: 0.22s;
+  }
+  .intro > *:nth-child(5) {
+    animation-delay: 0.28s;
+  }
+  .intro > *:nth-child(6) {
+    animation-delay: 0.34s;
+  }
+  .intro > *:nth-child(7) {
+    animation-delay: 0.4s;
+  }
+
+  .window {
+    animation: heroRise 0.9s var(--ease) 0.2s both;
+  }
+}

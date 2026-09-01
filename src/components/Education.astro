@@ -1,0 +1,34 @@
+---
+import Section from './Section.astro';
+import styles from './Education.module.css';
+import { useContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const ed = t.education;
+---
+
+<Section id="education" index={ed.index} heading={ed.heading} subtitle={ed.subtitle}>
+  <ol class={styles.timeline}>
+    {
+      ed.schools.map((school) => (
+        <li class={`${styles.item} reveal`}>
+          <div class={styles.top}>
+            <h3 class={styles.institution}>{school.institution}</h3>
+            <span class={styles.period}>{school.period}</span>
+          </div>
+          <p class={styles.degree}>
+            {school.degree}
+            <span class={styles.sep} aria-hidden="true">//</span>
+            <span class={styles.location}>{school.location}</span>
+          </p>
+          <p class={styles.description}>{school.description}</p>
+        </li>
+      ))
+    }
+  </ol>
+</Section>

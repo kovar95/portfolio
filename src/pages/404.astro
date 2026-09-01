@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout lang="en">
+  <section class="shell" style="padding-block: 8rem 10rem; text-align: center;">
+    <p
+      class="mono"
+      style="color: var(--accent); font-size: 0.8rem; letter-spacing: 0.1em;"
+    >
+      404
+    </p>
+    <h1
+      class="mono"
+      style="margin-top: 0.75rem; font-size: clamp(1.6rem, 6vw, 2.5rem); letter-spacing: -0.03em;"
+    >
+      Page not found
+    </h1>
+    <p style="margin-top: 1rem; color: var(--text-dim);">
+      That route does not exist — but the rest of the site does.
+    </p>
+    <a
+      class="mono"
+      href="/"
+      style="display: inline-block; margin-top: 2rem; padding: 0.7rem 1.2rem; border-radius: 8px; background: var(--accent); color: #04120f; font-size: 0.82rem; font-weight: 600;"
+    >
+      ← Back home
+    </a>
+  </section>
+</Layout>

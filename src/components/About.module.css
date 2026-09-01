@@ -1,0 +1,138 @@
+.layout {
+  display: grid;
+  gap: clamp(2.25rem, 5vw, 3.5rem);
+}
+
+.body p {
+  max-width: 40rem;
+  color: var(--text-dim);
+  font-size: 1.02rem;
+}
+
+.body p + p {
+  margin-top: 1.1rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 2.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.stat {
+  padding: 1.15rem 1.1rem;
+  background: var(--surface);
+}
+
+.statValue {
+  display: block;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.03em;
+}
+
+.statLabel {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--text-faint);
+}
+
+/* ── aside ────────────────────────────────────────────── */
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card {
+  padding: 1.25rem 1.3rem 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.cardHeading {
+  margin: 0 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.hobbies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.hobby {
+  padding: 0.28rem 0.6rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 99px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.langList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.langRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.langName {
+  font-size: 0.9rem;
+}
+
+.langLevel {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-faint);
+}
+
+.dots {
+  display: flex;
+  gap: 4px;
+}
+
+.dotOn,
+.dotOff {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.dotOn {
+  background: var(--accent);
+}
+
+.dotOff {
+  background: var(--border-strong);
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: 1.35fr 0.65fr;
+    align-items: start;
+  }
+}

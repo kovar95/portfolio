@@ -1,0 +1,121 @@
+---
+import styles from './Header.module.css';
+import { useContent, LANG_LABEL, LANGS, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const base = lang === 'en' ? '' : '/sr';
+
+const links = [
+  { href: `${base}/#about`, label: t.nav.about },
+  { href: `${base}/#experience`, label: t.nav.experience },
+  { href: `${base}/#stack`, label: t.nav.stack },
+  { href: `${base}/#education`, label: t.nav.education },
+  { href: `${base}/#contact`, label: t.nav.contact },
+];
+---
+
+<header class={styles.header} id="site-header" data-stuck="false">
+  <div class={`shell ${styles.inner}`}>
+    <a class={styles.logo} href={`${base}/`}>
+      <span class={styles.logoMark} aria-hidden="true">&gt;_</span>
+      <span>
+        stefan<span class={styles.logoDim}>.kovarbasic</span>
+      </span>
+    </a>
+
+    <nav class={styles.nav} aria-label={t.nav.primary}>
+      <ul class={styles.navList}>
+        {
+          links.map((link) => (
+            <li>
+              <a class={styles.navLink} href={link.href}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class={styles.actions}>
+      <div class={styles.langSwitch} role="group" aria-label={t.nav.langLabel}>
+        {
+          LANGS.map((code) => (
+            <a
+              class={styles.langOption}
+              href={code === 'en' ? '/' : '/sr/'}
+              hreflang={code}
+              aria-current={code === lang ? 'page' : undefined}
+            >
+              {LANG_LABEL[code]}
+            </a>
+          ))
+        }
+      </div>
+
+      <a class={styles.cta} href={`${base}/#contact`}>{t.contact.cta}</a>
+
+      <button
+        class={styles.burger}
+        type="button"
+        id="nav-toggle"
+        aria-expanded="false"
+        aria-controls="nav-sheet"
+        aria-label={t.nav.menu}
+      >
+        <span class={styles.burgerBars} aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class={styles.sheet} id="nav-sheet" data-open="false" inert>
+    <nav class="shell" aria-label={t.nav.menu}>
+      <div class={styles.sheetList}>
+        {
+          links.map((link, i) => (
+            <a class={styles.sheetLink} href={link.href} data-nav-close>
+              <span class={styles.sheetIndex}>0{i + 1}</span>
+              {link.label}
+            </a>
+          ))
+        }
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-header');
+  const toggle = document.getElementById('nav-toggle');
+  const sheet = document.getElementById('nav-sheet');
+
+  const setOpen = (open: boolean) => {
+    toggle?.setAttribute('aria-expanded', String(open));
+    sheet?.setAttribute('data-open', String(open));
+    /* Keep the collapsed sheet out of the tab order and the a11y tree. */
+    if (open) sheet?.removeAttribute('inert');
+    else sheet?.setAttribute('inert', '');
+  };
+
+  toggle?.addEventListener('click', () => {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  sheet?.querySelectorAll('[data-nav-close]').forEach((link) => {
+    link.addEventListener('click', () => setOpen(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setOpen(false);
+  });
+
+  const onScroll = () => {
+    header?.setAttribute('data-stuck', String(window.scrollY > 12));
+  };
+
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

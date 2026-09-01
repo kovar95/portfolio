@@ -1,0 +1,43 @@
+---
+import Section from './Section.astro';
+import styles from './Experience.module.css';
+import { useContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const e = t.experience;
+const isCurrent = (period: string) => /current|trenutno/i.test(period);
+---
+
+<Section id="experience" index={e.index} heading={e.heading} subtitle={e.subtitle}>
+  <ol class={styles.list}>
+    {
+      e.jobs.map((job, i) => (
+        <li class={`${styles.item} reveal`}>
+          <div class={styles.meta}>
+            <span class={styles.num}>{String(i + 1).padStart(2, '0')}</span>
+            <span class={styles.period}>{job.period}</span>
+            {isCurrent(job.period) && <span class={styles.badge}>{e.current}</span>}
+          </div>
+
+          <div>
+            <h3 class={styles.role}>{job.role}</h3>
+            <p class={styles.company}>
+              {job.company}
+              <span class={styles.locationSep} aria-hidden="true">//</span>
+              <span class={styles.location}>{job.location}</span>
+            </p>
+            <p class={styles.description}>{job.description}</p>
+            <ul class={styles.stack} aria-label={e.stackLabel}>
+              {job.stack.map((tech) => <li class={styles.tag}>{tech}</li>)}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</Section>

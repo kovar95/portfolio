@@ -1,0 +1,41 @@
+.footer {
+  border-top: 1px solid var(--border);
+  padding-block: 2rem 2.5rem;
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-faint);
+}
+
+.name {
+  color: var(--text-dim);
+}
+
+.built {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.spark {
+  color: var(--accent);
+}
+
+.top {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-faint);
+  transition: color 0.22s var(--ease);
+}
+
+.top:hover {
+  color: var(--accent);
+}
