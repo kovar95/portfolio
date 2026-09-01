@@ -15,6 +15,7 @@ npx astro check   # typecheck .astro + .ts
 ## Structure
 
 ```
+wrangler.jsonc           ← Cloudflare deploy config (assets-only Worker)
 src/
   i18n/content.ts        ← ALL copy, both languages, in one file
   layouts/
@@ -64,23 +65,32 @@ Live domain: **https://kovar95.dev** (registered at Cloudflare Registrar, DNS on
 serves `Disallow: /` on Cloudflare Pages **preview** deployments (any branch that is not
 `main`/`master`), so the `*.pages.dev` previews never compete with the real domain in search.
 
-### Cloudflare Pages setup
+### Cloudflare Workers setup
 
-Connect the GitHub repo in the Pages dashboard, then:
+Deployed as an **assets-only Worker** (no server code) — Cloudflare Pages is in maintenance mode
+as of 2026, so new projects should start on Workers.
+
+`wrangler.jsonc` holds the deploy config: it points at `./dist` and sets
+`not_found_handling: "404-page"` so `src/pages/404.astro` is served for unknown routes instead of a
+generic Cloudflare error.
+
+Connect the GitHub repo in the dashboard (Workers & Pages → Create → Workers → connect a repo):
 
 | Setting | Value |
 |---|---|
-| Framework preset | Astro |
 | Build command | `npm run build` |
-| Build output directory | `dist` |
+| Deploy command | `npx wrangler deploy` |
+| Production branch | `main` |
 | Environment variable | `NODE_VERSION` = `22` |
 
-Then add `kovar95.dev` (and `www`) as custom domains on the Pages project — Cloudflare creates the
-DNS records and issues the certificate automatically. `.dev` is on the HSTS preload list, so HTTPS
-is mandatory and there is no http:// fallback to configure.
+Then add `kovar95.dev` under the Worker's **Domains & Routes**. Cloudflare creates the DNS record
+itself — do not add a CNAME by hand. `.dev` is on the HSTS preload list, so HTTPS is mandatory and
+there is no http:// fallback to configure.
 
 `SITE_URL` does **not** need to be set — the domain is the default in `astro.config.mjs`. Set it
 only to build against a different origin.
+
+To deploy by hand instead: `npm run deploy`.
 
 ### Regenerating the share image
 
@@ -124,6 +134,6 @@ that server sends no compression and no `Cache-Control`, which a real host provi
 Static output — any host works.
 
 - **Vercel / Netlify**: connect the repo, framework preset "Astro", build `npm run build`, output `dist`.
-- **Cloudflare Pages** (current target): see the table above.
+- **Cloudflare Workers** (current target): see the table above.
 - **GitHub Pages**: push `dist/` or use the `withastro/action`. If you serve from a
   `user.github.io/repo` subpath, also set `base: '/repo'` in `astro.config.mjs`.
