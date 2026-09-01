@@ -18,10 +18,13 @@ import { useContent, PROFILE, type Lang } from '../i18n/content';
 
 interface Props {
   lang: Lang;
+  /** Overrides the document title — used by the 404 page. */
+  title?: string;
 }
 
-const { lang } = Astro.props;
+const { lang, title } = Astro.props;
 const t = useContent(lang);
+const pageTitle = title ?? t.meta.title;
 const htmlLang = lang === 'sr' ? 'sr-RS' : 'en';
 const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : null);
 const canonical = abs(Astro.url.pathname) ?? Astro.url.pathname;
@@ -42,7 +45,7 @@ const alternates = Astro.site
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{t.meta.title}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={t.meta.description} />
     <meta name="author" content={PROFILE.name} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -62,7 +65,7 @@ const alternates = Astro.site
     <meta name="theme-color" content="#08090c" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={t.meta.description} />
     <meta property="og:locale" content={lang === 'sr' ? 'sr_RS' : 'en_US'} />
     <meta property="og:url" content={canonical} />
@@ -78,7 +81,7 @@ const alternates = Astro.site
       )
     }
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={t.meta.title} />
+    <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={t.meta.description} />
     {ogImage && <meta name="twitter:image" content={ogImage} />}
 
