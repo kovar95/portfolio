@@ -80,7 +80,11 @@ draft: true              # optional — drafts show in `npm run dev` only
 Copy `src/content/blog/example-post/` (a draft, never published) as a starting point. Images go
 in the post's folder and are referenced relatively (`![Alt](./shot.png)`). Pushing to `main`
 publishes. The **blog** nav link only appears once at least one post is published, so the live
-site never links to an empty blog. Each language has an RSS feed at `/blog/rss.xml` and
+site never links to an empty blog.
+
+In Claude Code, `/blog-post` followed by the text does all of this. It translates the text into the
+other language, writes both files, checks the build and pushes to `main` once you confirm. See
+`.claude/skills/blog-post/SKILL.md`. Each language has an RSS feed at `/blog/rss.xml` and
 `/sr/blog/rss.xml`.
 
 Every component takes a `lang` prop and reads from `useContent(lang)`, so there is no runtime
