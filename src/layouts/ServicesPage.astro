@@ -13,6 +13,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = useContent(lang);
 const s = t.services;
+const c = s.compliance;
 
 /* The slug is translated ("izrada-sajta" / "website-development"), so the
    other-language path can't be derived from the URL. */
@@ -33,7 +34,7 @@ const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : pat
       name: s.title,
       description: s.metaDescription,
       url: abs(paths[lang]),
-      serviceType: s.items.map((item) => item.title),
+      serviceType: [...s.items.map((item) => item.title), c.chip],
       areaServed: { '@type': 'Country', name: 'Serbia' },
       provider: { '@type': 'Person', name: PROFILE.name, url: abs(localePath(lang)) },
       offers: {
@@ -77,7 +78,45 @@ const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : pat
     </ul>
   </Section>
 
-  <Section id="process" index="02" heading={s.processHeading}>
+  <Section id="compliance" index="02" heading={c.heading}>
+    <div class={`${styles.compliancePanel} reveal`}>
+      <div>
+        <h3 class={styles.complianceTitle}>{c.title}</h3>
+        <p class={styles.complianceBody}>{c.intro}</p>
+        <p class={styles.price}>
+          <span class={styles.priceLabel}>{c.priceLabel}</span>
+          <strong class={styles.priceValue}>{c.price}</strong>
+          <span class={styles.priceNote}>{c.fixPrice}</span>
+        </p>
+        <div class={styles.ctaRow}>
+          <a class={`${button.btn} ${button.btnPrimary}`} href="#inquiry" data-preselect={c.formOption}>
+            {c.cta}
+            <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+        <p class={styles.disclaimer}>{c.disclaimer}</p>
+      </div>
+
+      <div class={styles.fixBox}>
+        <h3 class={styles.includedHeading}>{c.fixHeading}</h3>
+        <p>{c.fixBody}</p>
+      </div>
+    </div>
+
+    <h3 class={styles.subHeading}>{c.checksHeading}</h3>
+    <ul class={styles.grid}>
+      {
+        c.checks.map((check) => (
+          <li class={`${styles.card} reveal`}>
+            <h4 class={styles.cardTitle}>{check.title}</h4>
+            <p class={styles.cardBody}>{check.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section id="process" index="03" heading={s.processHeading}>
     <div class={styles.split}>
       <ol class={styles.steps}>
         {
@@ -102,7 +141,7 @@ const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : pat
     </div>
   </Section>
 
-  <Section id="inquiry" index="03" heading={s.form.heading} subtitle={s.form.intro}>
+  <Section id="inquiry" index="04" heading={s.form.heading} subtitle={s.form.intro}>
     <InquiryForm lang={lang} />
   </Section>
 </Layout>

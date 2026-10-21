@@ -28,6 +28,18 @@
   color: var(--accent);
 }
 
+.legal {
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+  transition: color 0.22s var(--ease);
+}
+
+.legal:hover {
+  color: var(--accent);
+}
+
 .top {
   display: inline-flex;
   align-items: center;

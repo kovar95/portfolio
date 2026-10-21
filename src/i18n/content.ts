@@ -332,7 +332,7 @@ export const content = {
       path: 'website-development/',
       teaserTitle: 'Need a website?',
       teaserBody:
-        'I build business websites, landing pages, web apps and online stores for companies, local businesses and personal brands.',
+        'I build business websites, landing pages, web apps and online stores for companies, local businesses and personal brands — and check that sites follow Serbian law.',
       teaserCta: 'Services & prices',
       metaTitle: 'Website development — from €50 | Stefan Kovarbašić',
       metaDescription:
@@ -377,6 +377,55 @@ export const content = {
           description: 'Content changes, updates and fixes after launch, whenever you need them.',
         },
       ],
+      compliance: {
+        heading: 'legal compliance',
+        chip: 'Legal compliance',
+        title: 'Does your site follow Serbian law?',
+        intro:
+          'A free check of your site against the Data Protection Act (ZZPL), the rules on cookies, e-commerce and consumer protection. You get a report with every issue ranked by severity and how to fix it.',
+        checksHeading: 'what I check',
+        checks: [
+          {
+            title: 'Cookies and tracking',
+            description:
+              'Whether Google Analytics, Meta Pixel and similar tools load before consent, and whether “Reject” really works.',
+          },
+          {
+            title: 'Privacy policy',
+            description:
+              'Whether it exists, is in Serbian and mentions the services the site actually uses.',
+          },
+          {
+            title: 'Company details',
+            description:
+              'Name, address, tax ID, registration number and email, as the E-Commerce Act requires.',
+          },
+          {
+            title: 'Contact forms',
+            description:
+              'Whether forms that collect a name, email or phone number tell visitors how their data is used.',
+          },
+          {
+            title: 'Online store',
+            description:
+              'Terms of sale, complaints, the 14-day right of withdrawal and delivery information.',
+          },
+          {
+            title: 'Security and third parties',
+            description:
+              'HTTPS, plus Google Fonts, YouTube and maps that send visitor data without consent.',
+          },
+        ],
+        fixHeading: 'and if something is missing',
+        fixBody:
+          'I fix the cookie banner, privacy policy, company details and forms. You know the price up front, based on the report.',
+        priceLabel: 'check',
+        price: 'free',
+        fixPrice: 'Fixes are priced on request.',
+        cta: 'Request a free check',
+        disclaimer: 'An automated technical check, not legal advice.',
+        formOption: 'Free compliance check',
+      },
       includedHeading: 'every site comes with',
       included: [
         'Works on phones and tablets',
@@ -399,6 +448,8 @@ export const content = {
         name: 'Name',
         email: 'Email',
         phone: 'Phone',
+        website: 'Your current site',
+        websitePlaceholder: 'example.com',
         optional: 'optional',
         service: 'Service',
         servicePlaceholder: 'Choose…',
@@ -410,7 +461,7 @@ export const content = {
         success: 'Thanks! Your inquiry is on its way — I’ll be in touch soon.',
         errorVerification: 'The bot check didn’t pass. Please try again.',
         errorGeneric: 'Something went wrong. Please try again, or email me at',
-        privacy: 'I only use what you send here to reply to your inquiry.',
+        privacy: 'I only use what you send here to reply to your inquiry. Details are in the',
       },
     },
     skills: {
@@ -479,6 +530,11 @@ export const content = {
       readingTime: (minutes: number) => `${minutes} min read`,
       rss: 'RSS feed',
       tagsLabel: 'tags',
+    },
+    legal: {
+      privacyPath: 'privacy-policy/',
+      privacy: 'Privacy policy',
+      updated: 'Last updated',
     },
     footer: {
       built: 'Built with Astro & CSS Modules',
@@ -691,7 +747,7 @@ export const content = {
       path: 'izrada-sajta/',
       teaserTitle: 'Treba vam sajt?',
       teaserBody:
-        'Pravim prezentacione sajtove, landing stranice, web aplikacije i online prodavnice — za firme, lokale i lične brendove.',
+        'Pravim prezentacione sajtove, landing stranice, web aplikacije i online prodavnice za firme, lokale i lične brendove, a proveravam i usklađenost sajtova sa zakonom.',
       teaserCta: 'Usluge i cene',
       metaTitle: 'Izrada sajta — od 50 € | Stefan Kovarbašić',
       metaDescription:
@@ -736,6 +792,55 @@ export const content = {
           description: 'Izmene sadržaja, ažuriranja i popravke posle objave, kad god zatreba.',
         },
       ],
+      compliance: {
+        heading: 'usklađenost sa zakonom',
+        chip: 'Usklađenost sa zakonom',
+        title: 'Da li vaš sajt poštuje zakon?',
+        intro:
+          'Besplatna provera sajta po Zakonu o zaštiti podataka o ličnosti (ZZPL), pravilima o kolačićima, elektronskoj trgovini i zaštiti potrošača. Dobijate izveštaj sa problemima poređanim po težini i uputstvom kako se svaki rešava.',
+        checksHeading: 'šta proveravam',
+        checks: [
+          {
+            title: 'Kolačići i praćenje',
+            description:
+              'Da li se Google Analytics, Meta Pixel i slični servisi pokreću pre pristanka i da li dugme „Odbij” zaista radi.',
+          },
+          {
+            title: 'Politika privatnosti',
+            description:
+              'Da li postoji, da li je na srpskom i da li pominje servise koje sajt stvarno koristi.',
+          },
+          {
+            title: 'Podaci o firmi',
+            description:
+              'Naziv, adresa, PIB, matični broj i email, kako traži Zakon o elektronskoj trgovini.',
+          },
+          {
+            title: 'Kontakt forme',
+            description:
+              'Da li forme koje prikupljaju ime, email ili telefon obaveštavaju korisnika o obradi podataka.',
+          },
+          {
+            title: 'Web shop',
+            description:
+              'Uslovi kupovine, reklamacije, pravo na odustanak u roku od 14 dana i informacije o dostavi.',
+          },
+          {
+            title: 'Bezbednost i treće strane',
+            description:
+              'HTTPS, Google Fonts, YouTube i mape koje šalju podatke posetilaca bez pristanka.',
+          },
+        ],
+        fixHeading: 'a ako nešto fali',
+        fixBody:
+          'Sređujem cookie baner, politiku privatnosti, podatke o firmi i forme. Cenu znate unapred, na osnovu izveštaja.',
+        priceLabel: 'provera',
+        price: 'besplatna',
+        fixPrice: 'Usklađivanje je po ceni na upit.',
+        cta: 'Zatražite besplatnu proveru',
+        disclaimer: 'Automatska tehnička provera, ne predstavlja pravni savet.',
+        formOption: 'Besplatna provera usklađenosti',
+      },
       includedHeading: 'svaki sajt dobija',
       included: [
         'Prilagođen telefonima i tabletima',
@@ -758,6 +863,8 @@ export const content = {
         name: 'Ime i prezime',
         email: 'Email',
         phone: 'Telefon',
+        website: 'Adresa vašeg sajta',
+        websitePlaceholder: 'primer.rs',
         optional: 'opciono',
         service: 'Usluga',
         servicePlaceholder: 'Izaberite…',
@@ -769,7 +876,7 @@ export const content = {
         success: 'Hvala! Upit je poslat — javiću vam se uskoro.',
         errorVerification: 'Provera da niste robot nije uspela. Pokušajte ponovo.',
         errorGeneric: 'Slanje nije uspelo. Pokušajte ponovo ili pišite direktno na',
-        privacy: 'Podatke iz forme koristim samo da bih vam odgovorio na upit.',
+        privacy: 'Podatke iz forme koristim samo da bih vam odgovorio na upit. Detalji su u dokumentu',
       },
     },
     skills: {
@@ -838,6 +945,11 @@ export const content = {
       readingTime: (minutes: number) => `${minutes} min čitanja`,
       rss: 'RSS feed',
       tagsLabel: 'tagovi',
+    },
+    legal: {
+      privacyPath: 'politika-privatnosti/',
+      privacy: 'Politika privatnosti',
+      updated: 'Poslednja izmena',
     },
     footer: {
       built: 'Napravljeno u Astro-u i CSS modulima',

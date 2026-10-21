@@ -36,6 +36,7 @@ const page = localePath(lang, s.path);
 
     <ul class={styles.list}>
       {s.items.map((item) => <li class={styles.item}>{item.title}</li>)}
+      <li class={styles.item}>{s.compliance.chip}</li>
     </ul>
   </div>
 </Section>

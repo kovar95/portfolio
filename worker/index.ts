@@ -10,7 +10,7 @@ const FROM = { email: 'website@kovar95.dev', name: 'kovar95.dev' };
 const MAX_BODY_BYTES = 32 * 1024;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const LIMITS = { name: 100, email: 200, phone: 40, service: 80, message: 5000 } as const;
+const LIMITS = { name: 100, email: 200, phone: 40, website: 200, service: 80, message: 5000 } as const;
 type Field = keyof typeof LIMITS;
 
 type Siteverify = {
@@ -78,6 +78,7 @@ async function handleInquiry(request: Request, env: Env): Promise<Response> {
         `Ime: ${data.name}`,
         `Email: ${data.email}`,
         `Telefon: ${data.phone || '—'}`,
+        `Sajt: ${data.website || '—'}`,
         `Usluga: ${data.service || '—'}`,
         '',
         data.message,

@@ -22,6 +22,7 @@ src/
   content/blog/          ← blog posts: <slug>/en.md + <slug>/sr.md
   content.config.ts      ← blog frontmatter schema
   lib/blog.ts            ← post loading, the both-languages check, RSS
+  legal/privacy.{sr,en}.md ← privacy policy text (/sr/politika-privatnosti/, /privacy-policy/)
   layouts/
     Layout.astro         ← <head>, SEO/OG tags, JSON-LD, reveal script
     Home.astro           ← section order
@@ -120,6 +121,15 @@ new projects should start on Workers.
 `not_found_handling: "404-page"` so `src/pages/404.astro` is served for unknown routes instead of a
 generic Cloudflare error. The only server code is `worker/index.ts`, and `run_worker_first`
 limits it to `/api/*`, so page views are served straight from the edge without invoking it.
+
+#### Legal compliance offer
+
+The services page has a "legal compliance" section offering a free check against Serbian law
+(ZZPL, cookies, e-commerce, consumer protection), with fixes priced on request. The checks
+listed there mirror the separate Usklađeno scanner. For now a request arrives as a normal
+inquiry (service "Besplatna provera usklađenosti", plus the site address field) and the scan is
+run by hand. The site itself should keep passing that scanner, so update
+`src/legal/privacy.*.md` whenever a new service starts processing visitor data.
 
 #### Inquiry form (services page)
 

@@ -93,6 +93,78 @@
   font-size: 0.92rem;
 }
 
+/* ── legal compliance ─────────────────────────────────── */
+.compliancePanel {
+  display: grid;
+  gap: 1.75rem;
+  padding: clamp(1.4rem, 4vw, 2.25rem);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 100% 0%, var(--accent-faint), transparent 45%),
+    linear-gradient(180deg, var(--surface), var(--bg-soft));
+}
+
+.complianceTitle {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(1.25rem, 3.5vw, 1.55rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.complianceBody {
+  max-width: 38rem;
+  margin-top: 0.7rem;
+  color: var(--text-dim);
+}
+
+.compliancePanel .price {
+  margin-top: 1.25rem;
+}
+
+.compliancePanel .priceValue {
+  font-size: 1.5rem;
+}
+
+.compliancePanel .ctaRow {
+  margin-top: 1.25rem;
+}
+
+.disclaimer {
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+.fixBox {
+  align-self: start;
+  padding: 1.2rem 1.3rem 1.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text-dim);
+  font-size: 0.94rem;
+}
+
+.subHeading {
+  margin: 2.25rem 0 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+@media (min-width: 900px) {
+  .compliancePanel {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+
 /* ── process + included ───────────────────────────────── */
 .split {
   display: grid;

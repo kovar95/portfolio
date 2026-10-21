@@ -1,0 +1,43 @@
+---
+import Layout from './Layout.astro';
+import styles from './Blog.module.css';
+import { useContent, localePath, LANGS, PROFILE, type Lang } from '../i18n/content';
+import { formatDate } from '../lib/blog';
+import * as en from '../legal/privacy.en.md';
+import * as sr from '../legal/privacy.sr.md';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const { frontmatter, Content } = { en, sr }[lang];
+const updated = new Date(frontmatter.updated);
+
+/* Translated slugs ("politika-privatnosti" / "privacy-policy"). */
+const paths = Object.fromEntries(
+  LANGS.map((code) => [code, localePath(code, useContent(code).legal.privacyPath)]),
+) as Record<Lang, string>;
+---
+
+<Layout
+  lang={lang}
+  title={`${frontmatter.title} — ${PROFILE.name}`}
+  description={frontmatter.description}
+  paths={paths}
+>
+  <article class={`shell ${styles.article}`}>
+    <header class={styles.postHead}>
+      <h1 class={styles.postTitle}>{frontmatter.title}</h1>
+      <p class={styles.meta}>
+        {t.legal.updated}
+        <time datetime={updated.toISOString().slice(0, 10)}>{formatDate(updated, lang)}</time>
+      </p>
+    </header>
+
+    <div class={styles.prose}>
+      <Content />
+    </div>
+  </article>
+</Layout>

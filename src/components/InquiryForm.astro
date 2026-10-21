@@ -1,7 +1,7 @@
 ---
 import styles from './InquiryForm.module.css';
 import button from '../styles/Button.module.css';
-import { useContent, PROFILE, type Lang } from '../i18n/content';
+import { useContent, localePath, PROFILE, type Lang } from '../i18n/content';
 
 interface Props {
   lang: Lang;
@@ -63,10 +63,26 @@ const f = s.form;
     </label>
 
     <label class={styles.field}>
+      <span class={styles.label}>
+        {f.website} <span class={styles.optional}>({f.optional})</span>
+      </span>
+      <input
+        class={styles.input}
+        type="text"
+        inputmode="url"
+        name="website"
+        maxlength="200"
+        autocomplete="url"
+        placeholder={f.websitePlaceholder}
+      />
+    </label>
+
+    <label class={`${styles.field} ${styles.full}`}>
       <span class={styles.label}>{f.service}</span>
       <select class={styles.input} name="service" required>
         <option value="" disabled selected>{f.servicePlaceholder}</option>
         {s.items.map((item) => <option>{item.title}</option>)}
+        <option>{s.compliance.formOption}</option>
         <option>{f.serviceOther}</option>
       </select>
     </label>
@@ -88,7 +104,9 @@ const f = s.form;
 
   <div class={styles.actions}>
     <button class={`${button.btn} ${button.btnPrimary}`} type="submit">{f.submit}</button>
-    <p class={styles.privacy}>{f.privacy}</p>
+    <p class={styles.privacy}>
+      {f.privacy} <a href={localePath(lang, t.legal.privacyPath)}>{t.legal.privacy}</a>.
+    </p>
   </div>
 
   <p class={styles.status} role="status" aria-live="polite" data-status hidden></p>
@@ -128,6 +146,13 @@ const f = s.form;
       script.onerror = () => reject(new Error('Turnstile failed to load'));
       document.head.append(script);
     }));
+
+  /* Buttons such as "Request a free check" scroll to the form with their service already picked. */
+  document.addEventListener('click', (event) => {
+    const trigger = (event.target as Element | null)?.closest<HTMLElement>('[data-preselect]');
+    const select = document.querySelector<HTMLSelectElement>('[data-inquiry] select[name="service"]');
+    if (trigger && select) select.value = trigger.dataset.preselect ?? '';
+  });
 
   for (const form of document.querySelectorAll<HTMLFormElement>('[data-inquiry]')) {
     const holder = form.querySelector<HTMLElement>('[data-turnstile]')!;
