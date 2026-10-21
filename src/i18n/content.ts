@@ -27,6 +27,19 @@ export type School = {
 
 export type SkillGroup = { label: string; items: string[] };
 
+export type Project = {
+  /** Also the screenshot file name: src/assets/projects/<id>.png (or .jpg/.webp/.avif). */
+  id: string;
+  name: string;
+  kind: string;
+  description: string;
+  stack: string[];
+  url?: string;
+};
+
+type ProjectBase = Pick<Project, 'name' | 'stack' | 'url'>;
+type ProjectCopy = Pick<Project, 'kind' | 'description'>;
+
 export const PROFILE = {
   name: 'Stefan Kovarbašić',
   initials: 'SK',
@@ -55,6 +68,59 @@ const SKILL_ITEMS: string[][] = [
 const groups = (labels: string[]): SkillGroup[] =>
   labels.map((label, i) => ({ label, items: SKILL_ITEMS[i] }));
 
+/** Shared project data — only `kind` and `description` get translated. */
+const WORK_PROJECTS = {
+  guestfriend: {
+    name: 'Guestfriend',
+    url: 'https://gastfreund.net',
+    stack: ['React', 'MaterialUI', 'URQL', 'Redux', 'Nanostore'],
+  },
+  folddy: {
+    name: 'Folddy',
+    url: 'https://folddy.com',
+    stack: ['React', 'MaterialUI', 'TanStack', 'Astro.js'],
+  },
+  mailmergic: {
+    name: 'Mailmergic',
+    url: 'https://mailmergic.com',
+    stack: ['Node.js', 'React', 'MaterialUI', 'GCP', 'Electron'],
+  },
+  clariness: {
+    name: 'Clariness',
+    url: 'https://clariness.com',
+    stack: ['Next.js', 'React', 'TanStack Query', 'DynamoDB', 'AWS'],
+  },
+  kiwi: {
+    name: 'Kiwi.com',
+    url: 'https://www.kiwi.com',
+    stack: ['React', 'TypeScript', 'Redux', 'GraphQL', 'Relay'],
+  },
+} satisfies Record<string, ProjectBase>;
+
+const PERSONAL_PROJECTS = {
+  mileniumvet: {
+    name: 'Milenium Vet',
+    url: 'https://www.mileniumvet.rs',
+    stack: ['React', 'Supabase'],
+  },
+  nutrifit: {
+    name: 'NutriFit',
+    url: 'https://nutrifitnatasa.com',
+    stack: ['Astro.js'],
+  },
+  timenest: {
+    name: 'Time Nest',
+    url: 'https://timenestapp.com',
+    stack: ['Next.js', 'Supabase', 'Resend', 'Vercel', 'PWA'],
+  },
+} satisfies Record<string, ProjectBase>;
+
+/** Joins shared project data with one locale's copy; every project needs copy. */
+const projects = <Id extends string>(
+  base: Record<Id, ProjectBase>,
+  copy: Record<Id, ProjectCopy>,
+): Project[] => (Object.keys(base) as Id[]).map((id) => ({ id, ...base[id], ...copy[id] }));
+
 export const content = {
   en: {
     meta: {
@@ -66,6 +132,7 @@ export const content = {
     nav: {
       about: 'about',
       experience: 'experience',
+      projects: 'projects',
       stack: 'stack',
       education: 'education',
       contact: 'contact',
@@ -200,8 +267,59 @@ export const content = {
         },
       ] as Job[],
     },
-    skills: {
+    projects: {
       index: '03',
+      heading: 'projects',
+      subtitle: 'Products I have helped build at work, and sites I have made on my own.',
+      workHeading: 'at work',
+      personalHeading: 'some of my side projects',
+      shotAlt: 'Screenshot of',
+      work: projects(WORK_PROJECTS, {
+        guestfriend: {
+          kind: 'Hotel operations platform',
+          description:
+            'Jira meets Slack, built for hotels — tasks, chat and guest requests for staff and guests in one place. I work on the frontend of the newest product.',
+        },
+        folddy: {
+          kind: 'Document management system',
+          description: 'A document management app and its landing page — I build the frontend of both.',
+        },
+        mailmergic: {
+          kind: 'Document automation platform',
+          description:
+            'Turns Excel tables into personalised emails and PDF documents, saving companies hours of manual work. Full-stack, from Node.js on GCP to the React UI.',
+        },
+        clariness: {
+          kind: 'Clinical trial sponsor portal',
+          description:
+            'Connects pharmaceutical sponsors with Clariness, a patient recruitment company for medical trials. Full-stack, from the Next.js frontend to AWS.',
+        },
+        kiwi: {
+          kind: 'Customer support platform',
+          description:
+            'The internal tool that brings Kiwi.com’s support services into one place, helping millions of travellers. I owned its information domain.',
+        },
+      }),
+      personal: projects(PERSONAL_PROJECTS, {
+        mileniumvet: {
+          kind: 'Veterinary clinic website',
+          description:
+            'Website for a 24/7 veterinary clinic in Novi Sad — services, pet shop, promotions and a blog. React on the front, Supabase behind it.',
+        },
+        nutrifit: {
+          kind: 'Nutritionist website',
+          description:
+            'Site for a Belgrade nutritionist — personalised meal plans, client stories, e-books and a blog, with a free first consultation one click away.',
+        },
+        timenest: {
+          kind: 'Family memories platform & PWA',
+          description:
+            'A private time capsule for a child: parents, grandparents and godparents add letters, stories and voice messages that open on their 18th birthday. Full-stack, with paid plans and three languages.',
+        },
+      }),
+    },
+    skills: {
+      index: '04',
       heading: 'stack',
       subtitle: 'Tools I reach for, grouped by what they do.',
       groups: groups([
@@ -214,7 +332,7 @@ export const content = {
       ]),
     },
     education: {
-      index: '04',
+      index: '05',
       heading: 'education',
       subtitle: 'Graduated with the highest marks.',
       schools: [
@@ -245,7 +363,7 @@ export const content = {
       ] as School[],
     },
     contact: {
-      index: '05',
+      index: '06',
       heading: 'contact',
       title: 'Let’s build something.',
       body:
@@ -274,6 +392,7 @@ export const content = {
     nav: {
       about: 'o meni',
       experience: 'iskustvo',
+      projects: 'projekti',
       stack: 'tehnologije',
       education: 'obrazovanje',
       contact: 'kontakt',
@@ -408,8 +527,59 @@ export const content = {
         },
       ] as Job[],
     },
-    skills: {
+    projects: {
       index: '03',
+      heading: 'projekti',
+      subtitle: 'Proizvodi na kojima sam radio u kompanijama i sajtovi koje sam napravio samostalno.',
+      workHeading: 'poslovni projekti',
+      personalHeading: 'neki od privatnih projekata',
+      shotAlt: 'Snimak ekrana:',
+      work: projects(WORK_PROJECTS, {
+        guestfriend: {
+          kind: 'Platforma za rad hotela',
+          description:
+            'Spoj Jire i Slack-a, napravljen za hotele — zadaci, poruke i zahtevi gostiju za osoblje i goste na jednom mestu. Radim na frontendu najnovijeg proizvoda.',
+        },
+        folddy: {
+          kind: 'Sistem za upravljanje dokumentima',
+          description: 'Aplikacija za upravljanje dokumentima i njena landing stranica — radim frontend za oba.',
+        },
+        mailmergic: {
+          kind: 'Platforma za automatizaciju dokumenata',
+          description:
+            'Pretvara Excel tabele u personalizovane email-ove i PDF dokumente i štedi kompanijama sate ručnog rada. Full-stack, od Node.js-a na GCP-u do React interfejsa.',
+        },
+        clariness: {
+          kind: 'Portal za sponzore kliničkih studija',
+          description:
+            'Povezuje farmaceutske sponzore sa Clariness-om, kompanijom za regrutaciju pacijenata u medicinskim studijama. Full-stack, od Next.js frontenda do AWS-a.',
+        },
+        kiwi: {
+          kind: 'Platforma za korisničku podršku',
+          description:
+            'Interni alat koji objedinjuje servise korisničke podrške Kiwi.com-a i pomaže milionima putnika. Bio sam glavni zadužen za njen informacioni domen.',
+        },
+      }),
+      personal: projects(PERSONAL_PROJECTS, {
+        mileniumvet: {
+          kind: 'Sajt veterinarske ambulante',
+          description:
+            'Sajt veterinarske ambulante u Novom Sadu koja radi 24/7 — usluge, pet shop, akcije i blog. React na frontendu, Supabase u pozadini.',
+        },
+        nutrifit: {
+          kind: 'Sajt za nutricionistu',
+          description:
+            'Sajt nutricionistkinje iz Beograda — individualni planovi ishrane, iskustva klijenata, e-knjige i blog, uz besplatan uvodni razgovor na jedan klik.',
+        },
+        timenest: {
+          kind: 'Platforma i PWA za porodične uspomene',
+          description:
+            'Privatna vremenska kapsula za dete: roditelji, bake, deke i kumovi upisuju pisma, priče i glasovne poruke koje se otvaraju na 18. rođendan. Full-stack, sa planovima pretplate i na tri jezika.',
+        },
+      }),
+    },
+    skills: {
+      index: '04',
       heading: 'tehnologije',
       subtitle: 'Alati za kojima posežem, grupisani po nameni.',
       groups: groups([
@@ -422,7 +592,7 @@ export const content = {
       ]),
     },
     education: {
-      index: '04',
+      index: '05',
       heading: 'obrazovanje',
       subtitle: 'Diplomirao sa najvišim ocenama.',
       schools: [
@@ -453,7 +623,7 @@ export const content = {
       ] as School[],
     },
     contact: {
-      index: '05',
+      index: '06',
       heading: 'kontakt',
       title: 'Da napravimo nešto.',
       body:

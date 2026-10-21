@@ -1,0 +1,117 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Section from './Section.astro';
+import styles from './Projects.module.css';
+import { useContent, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const p = t.projects;
+
+/* Screenshots are matched to projects by file name — dropping
+   src/assets/projects/<project id>.png in place is all it takes. */
+const files = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/projects/*.{png,jpg,jpeg,webp,avif}',
+  { eager: true },
+);
+const shots = new Map(
+  Object.entries(files).map(([path, mod]) => [path.replace(/^.*\/|\.\w+$/g, ''), mod.default]),
+);
+
+const host = (url: string) => new URL(url).host.replace(/^www\./, '');
+
+const groups = [
+  {
+    key: 'work',
+    heading: p.workHeading,
+    items: p.work,
+    grid: styles.gridWork,
+    sizes: '(min-width: 1080px) 560px, (min-width: 720px) 50vw, 100vw',
+  },
+  {
+    key: 'personal',
+    heading: p.personalHeading,
+    items: p.personal,
+    grid: styles.gridPersonal,
+    sizes: '(min-width: 1080px) 320px, (min-width: 720px) 33vw, 100vw',
+  },
+].filter((group) => group.items.length > 0);
+---
+
+<Section id="projects" index={p.index} heading={p.heading} subtitle={p.subtitle}>
+  {
+    groups.map((group) => (
+      <div class={styles.group}>
+        <h3 class={`${styles.groupHeading} reveal`} id={`projects-${group.key}`}>
+          {group.heading}
+        </h3>
+        <ul class={group.grid} aria-labelledby={`projects-${group.key}`}>
+          {group.items.map((project) => {
+            const shot = shots.get(project.id);
+            return (
+              <li class={`${styles.item} reveal`}>
+                <div class={styles.card}>
+                  <div class={styles.frame}>
+                    <div class={styles.bar} aria-hidden="true">
+                      <span class={styles.lights}>
+                        <span />
+                        <span />
+                        <span />
+                      </span>
+                      <span class={styles.address}>
+                        {project.url ? host(project.url) : project.id}
+                      </span>
+                    </div>
+                    {shot ? (
+                      <Image
+                        class={styles.shot}
+                        src={shot}
+                        alt={`${p.shotAlt} ${project.name}`}
+                        widths={[480, 960, 1440]}
+                        sizes={group.sizes}
+                      />
+                    ) : (
+                      <div class={styles.placeholder} aria-hidden="true">
+                        <span>{project.name}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div class={styles.body}>
+                    <h4 class={styles.name}>
+                      {project.url ? (
+                        <a
+                          class={styles.link}
+                          href={project.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {project.name}
+                          <span class={styles.arrow} aria-hidden="true">↗</span>
+                        </a>
+                      ) : (
+                        project.name
+                      )}
+                    </h4>
+                    <p class={styles.kind}>{project.kind}</p>
+                    <p class={styles.description}>{project.description}</p>
+                    <ul class={styles.stack} aria-label={t.experience.stackLabel}>
+                      {project.stack.map((tech) => (
+                        <li class={styles.tag}>{tech}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))
+  }
+</Section>

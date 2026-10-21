@@ -25,7 +25,8 @@ src/
     Header.astro         ← nav, language switch, mobile sheet
     Hero.astro           ← name + stefan.ts code window
     Section.astro        ← shared "01 // heading" section wrapper
-    About / Experience / Skills / Education / Contact / Footer
+    About / Experience / Projects / Skills / Education / Contact / Footer
+  assets/projects/       ← project screenshots, named after the project id
   styles/global.css      ← design tokens + resets + .reveal
   pages/
     index.astro          ← English  (/)
@@ -41,6 +42,16 @@ public/
 Everything you'd want to change — jobs, skills, education, contact details, both translations —
 lives in `src/i18n/content.ts`. Add a job by appending to `experience.jobs` in **both** `en` and
 `sr`; the "current" badge is derived from the period text (`Current` / `trenutno`).
+
+Projects work like skills: shared data (name, URL, stack) lives once in `WORK_PROJECTS` /
+`PERSONAL_PROJECTS`, and each locale only supplies `kind` + `description` per project id — a
+missing translation is a type error. The "at work" list puts its first project on a full row when
+the count is odd, so the rest pair up.
+
+To add a screenshot, save it as `src/assets/projects/<id>.png` (or `.jpg` / `.webp` / `.avif`),
+e.g. `guestfriend.png`. It is picked up by file name and optimised to WebP at build time; until a
+file exists the card shows a placeholder. Use a 16:10 capture (1440×900 works well) — the frame
+crops to 16:10 from the top.
 
 Every component takes a `lang` prop and reads from `useContent(lang)`, so there is no runtime
 language switching — each locale is a separately prerendered static page.

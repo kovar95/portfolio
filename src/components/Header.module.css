@@ -247,7 +247,9 @@
   color: var(--text-faint);
 }
 
-@media (min-width: 860px) {
+/* The full nav needs ~1090px in Serbian (the longer locale); below that it
+   overflowed, so the burger sheet takes over. */
+@media (min-width: 1120px) {
   .nav {
     display: block;
   }
