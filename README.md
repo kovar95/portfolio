@@ -170,6 +170,10 @@ only to build against a different origin.
 
 To deploy by hand instead: `npm run deploy`.
 
+**Web Analytics** is switched on in the dashboard (Web Analytics → kovar95.dev, automatic setup).
+Cloudflare injects the beacon into HTML at the edge, so there is no snippet in this repo. It is
+cookieless, so the site needs no consent banner.
+
 ### Regenerating the share image
 
 `public/og.png` (1200×630) is a screenshot of the real hero, so it always matches the live design.
@@ -178,19 +182,23 @@ non-hero sections, CTA row and scroll cue hidden.
 
 ## Lighthouse
 
-Measured on the production build behind a server with gzip + cache headers (what Vercel, Netlify
-and Cloudflare Pages all do):
+Measured on the live site (https://kovar95.dev, Cloudflare) on 2026-10-21 with Lighthouse 12.
+The scores are Performance / Accessibility / Best Practices / SEO:
 
-| Page | Performance | Accessibility | Best Practices | SEO |
-|------|------------|---------------|----------------|-----|
-| `/`     | 100 | 100 | 100 | 100 |
-| `/sr/`  |  99 | 100 | 100 | 100 |
+| Page | Mobile | Desktop |
+|------|--------|---------|
+| `/`                     | 99 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
+| `/sr/`                  | 95 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
+| `/sr/izrada-sajta/`     | 98 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
+| `/website-development/` | 99 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
+| `/sr/blog/`             | 97 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
 
-Behind Cloudflare's CDN the real numbers should be at least this good — the measurement server was
-a local one doing plain gzip, with none of Cloudflare's brotli or edge caching.
-
-`/sr/` scores one point lower purely because Serbian body copy pulls Inter's `latin-ext` subset
-(+85 KB) for `š ć č ž đ`; English does not need it.
+CLS is 0 and TBT is 0–10 ms everywhere. The mobile points are lost only on LCP (1.9–2.6 s under
+Lighthouse's simulated slow 4G), almost all of it render delay. The hero text animates in from
+`opacity: 0`, and `/sr/` also waits on Inter's `latin-ext` subset (+85 KB) for `š ć č ž đ`, which
+English does not need. A local gzip server gives `/` 100 and `/sr/` 99 for both this build and the one
+before the projects, services and blog work, so those additions cost nothing. The live gap is
+network round-trips plus Lighthouse's run-to-run variance.
 
 Note that serving `dist/` with a plain `python3 -m http.server` reports a worse Performance score —
 that server sends no compression and no `Cache-Control`, which a real host provides.
