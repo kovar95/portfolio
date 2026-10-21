@@ -18,9 +18,13 @@ npx astro check   # typecheck .astro + .ts
 wrangler.jsonc           ← Cloudflare deploy config (assets-only Worker)
 src/
   i18n/content.ts        ← ALL copy, both languages, in one file
+  content/blog/          ← blog posts: <slug>/en.md + <slug>/sr.md
+  content.config.ts      ← blog frontmatter schema
+  lib/blog.ts            ← post loading, the both-languages check, RSS
   layouts/
     Layout.astro         ← <head>, SEO/OG tags, JSON-LD, reveal script
     Home.astro           ← section order
+    BlogIndex / BlogPost ← /blog/ and /blog/<slug>/ (plus /sr/ twins)
   components/
     Header.astro         ← nav, language switch, mobile sheet
     Hero.astro           ← name + stefan.ts code window
@@ -52,6 +56,32 @@ To add a screenshot, save it as `src/assets/projects/<id>.png` (or `.jpg` / `.we
 e.g. `guestfriend.png`. It is picked up by file name and optimised to WebP at build time; until a
 file exists the card shows a placeholder. Use a 16:10 capture (1440×900 works well) — the frame
 crops to 16:10 from the top.
+
+### Writing a blog post
+
+Each post is a folder with one Markdown file per language — both are required, and the build
+fails with a clear message if one is missing:
+
+```
+src/content/blog/my-post/en.md   → /blog/my-post/
+src/content/blog/my-post/sr.md   → /sr/blog/my-post/
+```
+
+```yaml
+---
+title: 'My post'
+description: 'One sentence for the post list and link previews.'
+date: 2026-10-28
+tags: ['astro', 'css']   # optional
+draft: true              # optional — drafts show in `npm run dev` only
+---
+```
+
+Copy `src/content/blog/example-post/` (a draft, never published) as a starting point. Images go
+in the post's folder and are referenced relatively (`![Alt](./shot.png)`). Pushing to `main`
+publishes. The **blog** nav link only appears once at least one post is published, so the live
+site never links to an empty blog. Each language has an RSS feed at `/blog/rss.xml` and
+`/sr/blog/rss.xml`.
 
 Every component takes a `lang` prop and reads from `useContent(lang)`, so there is no runtime
 language switching — each locale is a separately prerendered static page.

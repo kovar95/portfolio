@@ -6,16 +6,19 @@ interface Props {
   index: string;
   heading: string;
   subtitle?: string;
+  /** 1 when the section heading is the page's main heading (blog index). */
+  level?: 1 | 2;
 }
 
-const { id, index, heading, subtitle } = Astro.props;
+const { id, index, heading, subtitle, level = 2 } = Astro.props;
+const Heading = level === 1 ? 'h1' : 'h2';
 ---
 
 <section class={styles.section} id={id} aria-labelledby={`${id}-heading`}>
   <div class="shell">
     <header class={`${styles.head} reveal`}>
       <span class={styles.index}>{index}</span>
-      <h2 class={styles.title} id={`${id}-heading`}>{heading}</h2>
+      <Heading class={styles.title} id={`${id}-heading`}>{heading}</Heading>
       <span class={styles.rule} aria-hidden="true"></span>
     </header>
 

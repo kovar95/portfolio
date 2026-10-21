@@ -14,17 +14,23 @@ import styles from './Layout.module.css';
 
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { useContent, PROFILE, type Lang } from '../i18n/content';
+import { useContent, localePath, localizedPaths, PROFILE, type Lang } from '../i18n/content';
 
 interface Props {
   lang: Lang;
-  /** Overrides the document title — used by the 404 page. */
+  /** Overrides the document title — used by the 404 page and the blog. */
   title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+  /** This page in each locale; derived from the URL unless a page exists in one locale only. */
+  paths?: Record<Lang, string>;
 }
 
-const { lang, title } = Astro.props;
+const { lang, title, description, type = 'website' } = Astro.props;
+const paths = Astro.props.paths ?? localizedPaths(Astro.url.pathname);
 const t = useContent(lang);
 const pageTitle = title ?? t.meta.title;
+const pageDescription = description ?? t.meta.description;
 const htmlLang = lang === 'sr' ? 'sr-RS' : 'en';
 const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : null);
 const canonical = abs(Astro.url.pathname) ?? Astro.url.pathname;
@@ -33,9 +39,9 @@ const ogImage = abs('og.png');
 /** hreflang requires fully-qualified URLs, so skip them if `site` is unset. */
 const alternates = Astro.site
   ? [
-      { hreflang: 'en', href: abs('/')! },
-      { hreflang: 'sr-RS', href: abs('/sr/')! },
-      { hreflang: 'x-default', href: abs('/')! },
+      { hreflang: 'en', href: abs(paths.en)! },
+      { hreflang: 'sr-RS', href: abs(paths.sr)! },
+      { hreflang: 'x-default', href: abs(paths.en)! },
     ]
   : [];
 ---
@@ -46,7 +52,7 @@ const alternates = Astro.site
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
-    <meta name="description" content={t.meta.description} />
+    <meta name="description" content={pageDescription} />
     <meta name="author" content={PROFILE.name} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -64,9 +70,9 @@ const alternates = Astro.site
     }
     <meta name="theme-color" content="#08090c" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={type} />
     <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:locale" content={lang === 'sr' ? 'sr_RS' : 'en_US'} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={PROFILE.name} />
@@ -82,7 +88,7 @@ const alternates = Astro.site
     }
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={t.meta.description} />
+    <meta name="twitter:description" content={pageDescription} />
     {ogImage && <meta name="twitter:image" content={ogImage} />}
 
     <script
@@ -95,12 +101,14 @@ const alternates = Astro.site
         jobTitle: 'Frontend Developer',
         email: `mailto:${PROFILE.email}`,
         telephone: PROFILE.phoneHref,
-        url: canonical,
+        url: abs(localePath(lang)) ?? canonical,
         sameAs: [PROFILE.github, PROFILE.linkedin],
         address: { '@type': 'PostalAddress', addressLocality: 'Belgrade', addressCountry: 'RS' },
         knowsAbout: ['React', 'TypeScript', 'Astro', 'GraphQL', 'Node.js'],
       })}
     />
+
+    <slot name="head" />
 
     <script is:inline>
       /* Only opt into JS-driven reveals when the browser can actually finish the
@@ -117,7 +125,7 @@ const alternates = Astro.site
 
   <body>
     <a class="skip-link" href="#main">{t.nav.skip}</a>
-    <Header lang={lang} />
+    <Header lang={lang} paths={paths} />
     <main id="main" class={styles.main}>
       <slot />
     </main>

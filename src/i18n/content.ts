@@ -7,6 +7,12 @@ export const LANG_LABEL: Record<Lang, string> = { en: 'EN', sr: 'SR' };
 export const localePath = (lang: Lang, path = '') =>
   lang === 'en' ? `/${path}` : `/sr/${path}`;
 
+/** The same page in every locale — each page exists in both. */
+export const localizedPaths = (pathname: string): Record<Lang, string> => {
+  const path = pathname.replace(/^\/sr(?=\/|$)/, '').replace(/^\//, '');
+  return { en: localePath('en', path), sr: localePath('sr', path) };
+};
+
 export type Job = {
   company: string;
   role: string;
@@ -136,6 +142,7 @@ export const content = {
       stack: 'stack',
       education: 'education',
       contact: 'contact',
+      blog: 'blog',
       menu: 'Menu',
       primary: 'Primary',
       langLabel: 'Switch language',
@@ -375,6 +382,16 @@ export const content = {
       cta: 'Say hello',
       cvCta: 'Download CV',
     },
+    blog: {
+      title: 'Blog',
+      heading: 'blog',
+      subtitle: 'Notes on frontend development, tooling and the things I build.',
+      empty: 'No posts yet.',
+      allPosts: 'all posts',
+      readingTime: (minutes: number) => `${minutes} min read`,
+      rss: 'RSS feed',
+      tagsLabel: 'tags',
+    },
     footer: {
       built: 'Built with Astro & CSS Modules',
       rights: 'All rights reserved.',
@@ -396,6 +413,7 @@ export const content = {
       stack: 'tehnologije',
       education: 'obrazovanje',
       contact: 'kontakt',
+      blog: 'blog',
       menu: 'Meni',
       primary: 'Glavna navigacija',
       langLabel: 'Promeni jezik',
@@ -634,6 +652,16 @@ export const content = {
       linkedinLabel: 'linkedin',
       cta: 'Pozdravi me',
       cvCta: 'Preuzmi CV',
+    },
+    blog: {
+      title: 'Blog',
+      heading: 'blog',
+      subtitle: 'Beleške o frontend razvoju, alatima i stvarima koje pravim.',
+      empty: 'Još nema objava.',
+      allPosts: 'sve objave',
+      readingTime: (minutes: number) => `${minutes} min čitanja`,
+      rss: 'RSS feed',
+      tagsLabel: 'tagovi',
     },
     footer: {
       built: 'Napravljeno u Astro-u i CSS modulima',

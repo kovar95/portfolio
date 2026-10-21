@@ -1,0 +1,86 @@
+---
+import { render } from 'astro:content';
+import Layout from './Layout.astro';
+import styles from './Blog.module.css';
+import { useContent, localePath, PROFILE } from '../i18n/content';
+import { formatDate, postPath, readingMinutes, type Post } from '../lib/blog';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { lang, slug, entry } = post;
+const { title, description, date, tags, draft } = entry.data;
+const { Content } = await render(entry);
+
+const t = useContent(lang);
+const b = t.blog;
+const blogPath = localePath(lang, 'blog/');
+const isoDate = date.toISOString().slice(0, 10);
+const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : path);
+---
+
+<Layout lang={lang} title={`${title} — ${PROFILE.name}`} description={description} type="article">
+  <Fragment slot="head">
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={b.rss}
+      href={localePath(lang, 'blog/rss.xml')}
+    />
+    <meta property="article:published_time" content={isoDate} />
+    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: title,
+        description,
+        datePublished: isoDate,
+        inLanguage: lang === 'sr' ? 'sr-RS' : 'en',
+        url: abs(postPath(lang, slug)),
+        author: { '@type': 'Person', name: PROFILE.name, url: abs(localePath(lang)) },
+        keywords: tags.join(', ') || undefined,
+      })}
+    />
+  </Fragment>
+
+  <article class={`shell ${styles.article}`}>
+    <header class={styles.postHead}>
+      <a class={styles.crumb} href={blogPath}>
+        <span aria-hidden="true">~/</span>{b.heading}
+      </a>
+      <h1 class={styles.postTitle}>{title}</h1>
+      <p class={styles.lede}>{description}</p>
+      <p class={styles.meta}>
+        <time datetime={isoDate}>{formatDate(date, lang)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{b.readingTime(readingMinutes(entry.body))}</span>
+        {draft && <span class={styles.draft}>draft</span>}
+      </p>
+      {
+        tags.length > 0 && (
+          <ul class={styles.tags} aria-label={b.tagsLabel}>
+            {tags.map((tag) => (
+              <li class={styles.tag}>#{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </header>
+
+    <div class={styles.prose}>
+      <Content />
+    </div>
+
+    <footer class={styles.postFoot}>
+      <a class={styles.back} href={blogPath}>
+        <span aria-hidden="true">←</span>
+        {b.allPosts}
+      </a>
+    </footer>
+  </article>
+</Layout>

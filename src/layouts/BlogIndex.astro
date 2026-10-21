@@ -1,0 +1,62 @@
+---
+import Layout from './Layout.astro';
+import Section from '../components/Section.astro';
+import styles from './Blog.module.css';
+import { useContent, localePath, PROFILE, type Lang } from '../i18n/content';
+import { formatDate, getPosts, postPath, readingMinutes } from '../lib/blog';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const b = t.blog;
+const posts = await getPosts(lang);
+const feed = localePath(lang, 'blog/rss.xml');
+---
+
+<Layout lang={lang} title={`${b.title} — ${PROFILE.name}`} description={b.subtitle}>
+  <link slot="head" rel="alternate" type="application/rss+xml" title={b.rss} href={feed} />
+
+  <Section id="blog" index="~" heading={b.heading} subtitle={b.subtitle} level={1}>
+    {
+      posts.length > 0 ? (
+        <ol class={styles.list}>
+          {posts.map(({ slug, entry }) => (
+            <li class={`${styles.item} reveal`}>
+              <p class={styles.meta}>
+                <time datetime={entry.data.date.toISOString().slice(0, 10)}>
+                  {formatDate(entry.data.date, lang)}
+                </time>
+                <span aria-hidden="true">·</span>
+                <span>{b.readingTime(readingMinutes(entry.body))}</span>
+                {entry.data.draft && <span class={styles.draft}>draft</span>}
+              </p>
+              <h2 class={styles.title}>
+                <a class={styles.link} href={postPath(lang, slug)}>
+                  {entry.data.title}
+                </a>
+              </h2>
+              <p class={styles.description}>{entry.data.description}</p>
+              {entry.data.tags.length > 0 && (
+                <ul class={styles.tags} aria-label={b.tagsLabel}>
+                  {entry.data.tags.map((tag) => (
+                    <li class={styles.tag}>#{tag}</li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class={styles.empty}>{b.empty}</p>
+      )
+    }
+
+    <a class={styles.feed} href={feed}>
+      <span aria-hidden="true">◆</span>
+      {b.rss}
+    </a>
+  </Section>
+</Layout>

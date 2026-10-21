@@ -1,22 +1,30 @@
 ---
 import styles from './Header.module.css';
-import { useContent, LANG_LABEL, LANGS, type Lang } from '../i18n/content';
+import { useContent, localePath, LANG_LABEL, LANGS, type Lang } from '../i18n/content';
+import { hasPosts } from '../lib/blog';
 
 interface Props {
   lang: Lang;
+  /** Where the language switch points — the current page in each locale. */
+  paths: Record<Lang, string>;
 }
 
-const { lang } = Astro.props;
+const { lang, paths } = Astro.props;
 const t = useContent(lang);
 const base = lang === 'en' ? '' : '/sr';
+const blogPath = localePath(lang, 'blog/');
+const inBlog = Astro.url.pathname.startsWith(blogPath);
 
-const links = [
+const links: { href: string; label: string; current?: boolean; sheetOnly?: boolean }[] = [
   { href: `${base}/#about`, label: t.nav.about },
   { href: `${base}/#experience`, label: t.nav.experience },
   { href: `${base}/#projects`, label: t.nav.projects },
   { href: `${base}/#stack`, label: t.nav.stack },
   { href: `${base}/#education`, label: t.nav.education },
-  { href: `${base}/#contact`, label: t.nav.contact },
+  /* The desktop bar already has the "Say hello" button pointing here. */
+  { href: `${base}/#contact`, label: t.nav.contact, sheetOnly: true },
+  /* Hidden until the first post is published, so the live site never links an empty blog. */
+  ...((await hasPosts()) ? [{ href: blogPath, label: t.nav.blog, current: inBlog }] : []),
 ];
 ---
 
@@ -32,11 +40,19 @@ const links = [
     <nav class={styles.nav} aria-label={t.nav.primary}>
       <ul class={styles.navList}>
         {
-          links.map((link) => (
-            <li>
-              <a class={styles.navLink} href={link.href}>{link.label}</a>
-            </li>
-          ))
+          links
+            .filter((link) => !link.sheetOnly)
+            .map((link) => (
+              <li>
+                <a
+                  class={styles.navLink}
+                  href={link.href}
+                  aria-current={link.current ? 'page' : undefined}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
         }
       </ul>
     </nav>
@@ -47,7 +63,7 @@ const links = [
           LANGS.map((code) => (
             <a
               class={styles.langOption}
-              href={code === 'en' ? '/' : '/sr/'}
+              href={paths[code]}
               hreflang={code}
               aria-current={code === lang ? 'page' : undefined}
             >
@@ -77,7 +93,12 @@ const links = [
       <div class={styles.sheetList}>
         {
           links.map((link, i) => (
-            <a class={styles.sheetLink} href={link.href} data-nav-close>
+            <a
+              class={styles.sheetLink}
+              href={link.href}
+              aria-current={link.current ? 'page' : undefined}
+              data-nav-close
+            >
               <span class={styles.sheetIndex}>0{i + 1}</span>
               {link.label}
             </a>
