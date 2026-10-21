@@ -43,7 +43,7 @@ type ProjectCopy = Pick<Project, 'kind' | 'description'>;
 export const PROFILE = {
   name: 'Stefan Kovarbašić',
   initials: 'SK',
-  email: 'kovar.zmaj@gmail.com',
+  email: 'support@kovar95.dev',
   phone: '+381 64 134 6483',
   phoneHref: '+381641346483',
   github: 'https://github.com/kovar95',
