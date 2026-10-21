@@ -1,0 +1,43 @@
+/* Shared call-to-action buttons (the hero keeps its own, slightly louder variant). */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  transition:
+    transform 0.22s var(--ease),
+    box-shadow 0.22s var(--ease),
+    border-color 0.22s var(--ease),
+    background-color 0.22s var(--ease),
+    color 0.22s var(--ease);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btnPrimary {
+  background: var(--accent);
+  color: #04120f;
+  font-weight: 600;
+  box-shadow: 0 6px 22px -8px rgba(94, 234, 212, 0.6);
+}
+
+.btnPrimary:hover {
+  background: #7df3e0;
+}
+
+.btnGhost {
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+}
+
+.btnGhost:hover {
+  border-color: var(--accent-deep);
+  color: var(--accent);
+}

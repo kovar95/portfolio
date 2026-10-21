@@ -1,0 +1,108 @@
+---
+import Layout from './Layout.astro';
+import Section from '../components/Section.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import styles from './ServicesPage.module.css';
+import button from '../styles/Button.module.css';
+import { useContent, localePath, PROFILE, LANGS, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const s = t.services;
+
+/* The slug is translated ("izrada-sajta" / "website-development"), so the
+   other-language path can't be derived from the URL. */
+const paths = Object.fromEntries(
+  LANGS.map((code) => [code, localePath(code, useContent(code).services.path)]),
+) as Record<Lang, string>;
+const abs = (path: string) => (Astro.site ? new URL(path, Astro.site).href : path);
+---
+
+<Layout lang={lang} title={s.metaTitle} description={s.metaDescription} paths={paths}>
+  <script
+    slot="head"
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: s.title,
+      description: s.metaDescription,
+      url: abs(paths[lang]),
+      serviceType: s.items.map((item) => item.title),
+      areaServed: { '@type': 'Country', name: 'Serbia' },
+      provider: { '@type': 'Person', name: PROFILE.name, url: abs(localePath(lang)) },
+      offers: {
+        '@type': 'Offer',
+        priceSpecification: { '@type': 'PriceSpecification', minPrice: 50, priceCurrency: 'EUR' },
+      },
+    })}
+  />
+
+  <section class={`shell ${styles.head}`}>
+    <h1 class={styles.title}>{s.title}</h1>
+    <p class={styles.intro}>{s.intro}</p>
+
+    <p class={styles.price}>
+      <span class={styles.priceLabel}>{s.priceLabel}</span>
+      <strong class={styles.priceValue}>{s.price}</strong>
+      <span class={styles.priceNote}>{s.priceNote}</span>
+    </p>
+
+    <div class={styles.ctaRow}>
+      <a class={`${button.btn} ${button.btnPrimary}`} href="#inquiry">
+        {s.inquiryCta}
+        <span aria-hidden="true">↓</span>
+      </a>
+      <a class={`${button.btn} ${button.btnGhost}`} href={`${localePath(lang)}#projects`}>
+        {s.workCta}
+      </a>
+    </div>
+  </section>
+
+  <Section id="offer" index="01" heading={s.offerHeading}>
+    <ul class={styles.grid}>
+      {
+        s.items.map((item) => (
+          <li class={`${styles.card} reveal`}>
+            <h3 class={styles.cardTitle}>{item.title}</h3>
+            <p class={styles.cardBody}>{item.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section id="process" index="02" heading={s.processHeading}>
+    <div class={styles.split}>
+      <ol class={styles.steps}>
+        {
+          s.steps.map((step, i) => (
+            <li class={`${styles.step} reveal`}>
+              <span class={styles.stepNum}>{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 class={styles.stepTitle}>{step.title}</h3>
+                <p class={styles.stepBody}>{step.description}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <div class={`${styles.included} reveal`}>
+        <h3 class={styles.includedHeading}>{s.includedHeading}</h3>
+        <ul class={styles.includedList}>
+          {s.included.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </Section>
+
+  <Section id="inquiry" index="03" heading={s.form.heading} subtitle={s.form.intro}>
+    <InquiryForm lang={lang} />
+  </Section>
+</Layout>

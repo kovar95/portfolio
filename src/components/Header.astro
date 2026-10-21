@@ -13,18 +13,21 @@ const { lang, paths } = Astro.props;
 const t = useContent(lang);
 const base = lang === 'en' ? '' : '/sr';
 const blogPath = localePath(lang, 'blog/');
-const inBlog = Astro.url.pathname.startsWith(blogPath);
+const servicesPath = localePath(lang, t.services.path);
+const current = (path: string) => Astro.url.pathname.startsWith(path);
 
 const links: { href: string; label: string; current?: boolean; sheetOnly?: boolean }[] = [
   { href: `${base}/#about`, label: t.nav.about },
   { href: `${base}/#experience`, label: t.nav.experience },
   { href: `${base}/#projects`, label: t.nav.projects },
+  { href: servicesPath, label: t.nav.services, current: current(servicesPath) },
   { href: `${base}/#stack`, label: t.nav.stack },
-  { href: `${base}/#education`, label: t.nav.education },
+  /* Least useful to clients, and the bar has no room for it next to services. */
+  { href: `${base}/#education`, label: t.nav.education, sheetOnly: true },
   /* The desktop bar already has the "Say hello" button pointing here. */
   { href: `${base}/#contact`, label: t.nav.contact, sheetOnly: true },
   /* Hidden until the first post is published, so the live site never links an empty blog. */
-  ...((await hasPosts()) ? [{ href: blogPath, label: t.nav.blog, current: inBlog }] : []),
+  ...((await hasPosts()) ? [{ href: blogPath, label: t.nav.blog, current: current(blogPath) }] : []),
 ];
 ---
 

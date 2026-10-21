@@ -1,0 +1,175 @@
+/* ── page head ────────────────────────────────────────── */
+.head {
+  padding-block: clamp(3rem, 8vw, 5.5rem) 0;
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: clamp(2rem, 7vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.intro {
+  max-width: 40rem;
+  margin-top: 1.1rem;
+  color: var(--text-dim);
+  font-size: 1.05rem;
+}
+
+.price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.7rem;
+  margin-top: 1.75rem;
+}
+
+.priceLabel {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.priceValue {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.priceNote {
+  flex-basis: 100%;
+  font-size: 0.88rem;
+  color: var(--text-faint);
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.75rem;
+}
+
+/* ── what I build ─────────────────────────────────────── */
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+}
+
+.card {
+  padding: 1.2rem 1.25rem 1.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.cardTitle::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+
+.cardBody {
+  margin-top: 0.6rem;
+  color: var(--text-dim);
+  font-size: 0.92rem;
+}
+
+/* ── process + included ───────────────────────────────── */
+.split {
+  display: grid;
+  gap: 2rem;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+}
+
+.stepNum {
+  flex-shrink: 0;
+  padding-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+.stepTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.stepBody {
+  margin-top: 0.2rem;
+  color: var(--text-dim);
+  font-size: 0.92rem;
+}
+
+.included {
+  align-self: start;
+  padding: 1.25rem 1.35rem 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+}
+
+.includedHeading {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.includedList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  color: var(--text);
+  font-size: 0.94rem;
+}
+
+.includedList li {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.includedList li::before {
+  content: '✓';
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+@media (min-width: 820px) {
+  .split {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 3rem;
+  }
+}

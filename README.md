@@ -15,7 +15,8 @@ npx astro check   # typecheck .astro + .ts
 ## Structure
 
 ```
-wrangler.jsonc           ← Cloudflare deploy config (assets-only Worker)
+wrangler.jsonc           ← Cloudflare deploy config (static assets + /api/* Worker)
+worker/index.ts          ← POST /api/inquiry: Turnstile check, then email
 src/
   i18n/content.ts        ← ALL copy, both languages, in one file
   content/blog/          ← blog posts: <slug>/en.md + <slug>/sr.md
@@ -112,12 +113,44 @@ serves `Disallow: /` on Cloudflare Pages **preview** deployments (any branch tha
 
 ### Cloudflare Workers setup
 
-Deployed as an **assets-only Worker** (no server code) — Cloudflare Pages is in maintenance mode
-as of 2026, so new projects should start on Workers.
+Deployed as a Worker with static assets — Cloudflare Pages is in maintenance mode as of 2026, so
+new projects should start on Workers.
 
 `wrangler.jsonc` holds the deploy config: it points at `./dist` and sets
 `not_found_handling: "404-page"` so `src/pages/404.astro` is served for unknown routes instead of a
-generic Cloudflare error.
+generic Cloudflare error. The only server code is `worker/index.ts`, and `run_worker_first`
+limits it to `/api/*`, so page views are served straight from the edge without invoking it.
+
+#### Inquiry form (services page)
+
+`/website-development/` and `/sr/izrada-sajta/` post to `/api/inquiry`. The Worker validates the
+fields, checks the Cloudflare Turnstile token server-side (success, action `inquiry`, hostname in
+`TURNSTILE_HOSTNAMES`), then emails the inquiry through the `MAILER` send_email binding, with
+Reply-To set to the visitor. The recipient must be a verified Email Routing destination, which is
+free on every plan.
+
+| Setting | Where | Value |
+|---|---|---|
+| Turnstile site key (public) | `TURNSTILE_SITE_KEY` in `src/components/InquiryForm.astro` | from the dashboard widget |
+| `TURNSTILE_SECRET` | `npx wrangler secret put TURNSTILE_SECRET` | the widget's secret key |
+| `INQUIRY_TO` | `npx wrangler secret put INQUIRY_TO` | the verified destination address (kept out of this public repo) |
+| `TURNSTILE_HOSTNAMES` | `vars` in `wrangler.jsonc` | `kovar95.dev` |
+
+The build fails until the site key is set, so a form that can never pass verification can't ship.
+
+To run the form locally, create `.dev.vars` (gitignored) with Turnstile's test secret
+`1x0000000000000000000000000000000AA`, `TURNSTILE_HOSTNAMES=example.com`,
+`TURNSTILE_ALLOW_TEST_KEYS=true` and any `INQUIRY_TO`. Then build with the test site key and start
+the Worker:
+
+```bash
+PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA npm run build
+npx wrangler dev
+```
+
+Locally, sent emails are written to `.wrangler/tmp/email/` instead of being delivered.
+`npm run check` also typechecks the Worker; it regenerates `worker/worker-configuration.d.ts`
+(gitignored) from `wrangler.jsonc` first.
 
 Connect the GitHub repo in the dashboard (Workers & Pages → Create → Workers → connect a repo):
 

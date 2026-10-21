@@ -139,6 +139,7 @@ export const content = {
       about: 'about',
       experience: 'experience',
       projects: 'projects',
+      services: 'services',
       stack: 'stack',
       education: 'education',
       contact: 'contact',
@@ -153,7 +154,7 @@ export const content = {
       role: 'Frontend Developer',
       tagline:
         'I build interfaces for products used by millions — from a hotel operations platform to a flight-booking giant.',
-      status: 'open to opportunities',
+      status: 'available for new projects',
       location: 'Belgrade, Serbia',
       primaryCta: 'Get in touch',
       secondaryCta: 'Download CV',
@@ -169,7 +170,7 @@ export const content = {
         values: {
           role: 'Frontend Developer',
           location: 'Belgrade, Serbia',
-          status: 'open to opportunities',
+          status: 'available for new projects',
         },
       },
     },
@@ -325,8 +326,95 @@ export const content = {
         },
       }),
     },
-    skills: {
+    services: {
       index: '04',
+      heading: 'services',
+      path: 'website-development/',
+      teaserTitle: 'Need a website?',
+      teaserBody:
+        'I build business websites, landing pages, web apps and online stores for companies, local businesses and personal brands.',
+      teaserCta: 'Services & prices',
+      metaTitle: 'Website development — from €50 | Stefan Kovarbašić',
+      metaDescription:
+        'Websites, landing pages, web apps and online stores built to fit your business, by a Belgrade frontend developer with 6+ years of experience. Prices from €50.',
+      title: 'Website development',
+      intro:
+        'From a one-page site to a full web application — built fast, easy to use on a phone and ready for Google. Tell me what you need and you’ll get a quote.',
+      priceLabel: 'prices from',
+      price: '€50',
+      priceNote: 'The final price depends on what the project needs.',
+      inquiryCta: 'Send an inquiry',
+      workCta: 'See my work',
+      offerHeading: 'what I build',
+      items: [
+        {
+          title: 'Business website',
+          description:
+            'A site for your company, shop, practice or personal brand — pages about you, your services and how to reach you, built for phones first.',
+        },
+        {
+          title: 'Landing page',
+          description:
+            'A single page for a product, campaign or event, built to turn visitors into calls and inquiries.',
+        },
+        {
+          title: 'Web application',
+          description:
+            'Apps with user accounts, a database and payments — from booking systems to platforms like Time Nest.',
+        },
+        {
+          title: 'Online store',
+          description:
+            'A store on Shopify or built from scratch, with a product catalogue, cart and checkout.',
+        },
+        {
+          title: 'Redesign',
+          description:
+            'A refresh for an existing site: a modern look, faster loading and easier upkeep.',
+        },
+        {
+          title: 'Maintenance',
+          description: 'Content changes, updates and fixes after launch, whenever you need them.',
+        },
+      ],
+      includedHeading: 'every site comes with',
+      included: [
+        'Works on phones and tablets',
+        'Fast loading',
+        'Basic setup for Google search',
+        'Help with your domain, hosting and business email',
+      ],
+      processHeading: 'how it works',
+      steps: [
+        { title: 'Send an inquiry', description: 'Tell me what you need — no commitment.' },
+        { title: 'Get a quote', description: 'I get back to you with a plan, a price and a timeline.' },
+        {
+          title: 'Build and launch',
+          description: 'I build it, you follow along, and we launch when you’re happy.',
+        },
+      ],
+      form: {
+        heading: 'send an inquiry',
+        intro: 'Describe the project in a few sentences and I’ll get back to you with a quote.',
+        name: 'Name',
+        email: 'Email',
+        phone: 'Phone',
+        optional: 'optional',
+        service: 'Service',
+        servicePlaceholder: 'Choose…',
+        serviceOther: 'Something else',
+        message: 'Message',
+        messagePlaceholder: 'E.g. a five-page site for a dental practice with online booking…',
+        submit: 'Send inquiry',
+        sending: 'Sending…',
+        success: 'Thanks! Your inquiry is on its way — I’ll be in touch soon.',
+        errorVerification: 'The bot check didn’t pass. Please try again.',
+        errorGeneric: 'Something went wrong. Please try again, or email me at',
+        privacy: 'I only use what you send here to reply to your inquiry.',
+      },
+    },
+    skills: {
+      index: '05',
       heading: 'stack',
       subtitle: 'Tools I reach for, grouped by what they do.',
       groups: groups([
@@ -339,7 +427,7 @@ export const content = {
       ]),
     },
     education: {
-      index: '05',
+      index: '06',
       heading: 'education',
       subtitle: 'Graduated with the highest marks.',
       schools: [
@@ -370,11 +458,11 @@ export const content = {
       ] as School[],
     },
     contact: {
-      index: '06',
+      index: '07',
       heading: 'contact',
       title: 'Let’s build something.',
       body:
-        'Open to frontend and full-stack roles, contract work and interesting side projects. The fastest way to reach me is email.',
+        'Need a website, a web app or another frontend developer on your team? Tell me what you’re building — email is the fastest way to reach me.',
       emailLabel: 'email',
       phoneLabel: 'phone',
       githubLabel: 'github',
@@ -410,6 +498,7 @@ export const content = {
       about: 'o meni',
       experience: 'iskustvo',
       projects: 'projekti',
+      services: 'usluge',
       stack: 'tehnologije',
       education: 'obrazovanje',
       contact: 'kontakt',
@@ -424,7 +513,7 @@ export const content = {
       role: 'Frontend Developer',
       tagline:
         'Gradim interfejse za proizvode koje koriste milioni — od platforme za upravljanje hotelima do giganta za rezervaciju letova.',
-      status: 'otvoren za nove prilike',
+      status: 'dostupan za nove projekte',
       location: 'Beograd, Srbija',
       primaryCta: 'Kontaktiraj me',
       secondaryCta: 'Preuzmi CV',
@@ -440,7 +529,7 @@ export const content = {
         values: {
           role: 'Frontend Developer',
           location: 'Beograd, Srbija',
-          status: 'otvoren za nove prilike',
+          status: 'dostupan za nove projekte',
         },
       },
     },
@@ -596,8 +685,95 @@ export const content = {
         },
       }),
     },
-    skills: {
+    services: {
       index: '04',
+      heading: 'usluge',
+      path: 'izrada-sajta/',
+      teaserTitle: 'Treba vam sajt?',
+      teaserBody:
+        'Pravim prezentacione sajtove, landing stranice, web aplikacije i online prodavnice — za firme, lokale i lične brendove.',
+      teaserCta: 'Usluge i cene',
+      metaTitle: 'Izrada sajta — od 50 € | Stefan Kovarbašić',
+      metaDescription:
+        'Izrada sajtova, landing stranica, web aplikacija i online prodavnica po meri. Frontend developer iz Beograda sa više od 6 godina iskustva. Cene od 50 €.',
+      title: 'Izrada sajta',
+      intro:
+        'Od sajta na jednoj stranici do kompletne web aplikacije — brzo, pregledno na telefonu i spremno za Google. Opišite šta vam treba i dobićete ponudu.',
+      priceLabel: 'cene od',
+      price: '50 €',
+      priceNote: 'Konačna cena zavisi od potreba projekta.',
+      inquiryCta: 'Pošaljite upit',
+      workCta: 'Pogledajte radove',
+      offerHeading: 'šta pravim',
+      items: [
+        {
+          title: 'Prezentacioni sajt',
+          description:
+            'Sajt za firmu, lokal, ordinaciju ili lični brend — stranice o vama, uslugama i kontaktu, prilagođen pre svega telefonima.',
+        },
+        {
+          title: 'Landing stranica',
+          description:
+            'Jedna stranica za proizvod, kampanju ili događaj, napravljena da posetioce pretvori u pozive i upite.',
+        },
+        {
+          title: 'Web aplikacija',
+          description:
+            'Aplikacije sa korisničkim nalozima, bazom podataka i plaćanjem — od sistema za rezervacije do platformi poput Time Nest-a.',
+        },
+        {
+          title: 'Online prodavnica',
+          description:
+            'Prodavnica na Shopify-ju ili po meri, sa katalogom proizvoda, korpom i plaćanjem.',
+        },
+        {
+          title: 'Redizajn',
+          description:
+            'Osveženje postojećeg sajta: moderniji izgled, brže učitavanje i lakše održavanje.',
+        },
+        {
+          title: 'Održavanje',
+          description: 'Izmene sadržaja, ažuriranja i popravke posle objave, kad god zatreba.',
+        },
+      ],
+      includedHeading: 'svaki sajt dobija',
+      included: [
+        'Prilagođen telefonima i tabletima',
+        'Brzo učitavanje',
+        'Osnovna podešavanja za Google pretragu',
+        'Pomoć oko domena, hostinga i poslovnog mejla',
+      ],
+      processHeading: 'kako radimo',
+      steps: [
+        { title: 'Pošaljete upit', description: 'Opišite šta vam treba, bez obaveze.' },
+        { title: 'Dobijete ponudu', description: 'Javljam se sa predlogom, cenom i rokom.' },
+        {
+          title: 'Izrada i objava',
+          description: 'Pravim sajt, vi pratite napredak, a objavljujemo ga kad ste zadovoljni.',
+        },
+      ],
+      form: {
+        heading: 'pošaljite upit',
+        intro: 'Opišite projekat u par rečenica i javiću vam se sa ponudom.',
+        name: 'Ime i prezime',
+        email: 'Email',
+        phone: 'Telefon',
+        optional: 'opciono',
+        service: 'Usluga',
+        servicePlaceholder: 'Izaberite…',
+        serviceOther: 'Nešto drugo',
+        message: 'Poruka',
+        messagePlaceholder: 'Npr. sajt za stomatološku ordinaciju sa pet stranica i online zakazivanjem…',
+        submit: 'Pošalji upit',
+        sending: 'Šaljem…',
+        success: 'Hvala! Upit je poslat — javiću vam se uskoro.',
+        errorVerification: 'Provera da niste robot nije uspela. Pokušajte ponovo.',
+        errorGeneric: 'Slanje nije uspelo. Pokušajte ponovo ili pišite direktno na',
+        privacy: 'Podatke iz forme koristim samo da bih vam odgovorio na upit.',
+      },
+    },
+    skills: {
+      index: '05',
       heading: 'tehnologije',
       subtitle: 'Alati za kojima posežem, grupisani po nameni.',
       groups: groups([
@@ -610,7 +786,7 @@ export const content = {
       ]),
     },
     education: {
-      index: '05',
+      index: '06',
       heading: 'obrazovanje',
       subtitle: 'Diplomirao sa najvišim ocenama.',
       schools: [
@@ -641,11 +817,11 @@ export const content = {
       ] as School[],
     },
     contact: {
-      index: '06',
+      index: '07',
       heading: 'kontakt',
       title: 'Da napravimo nešto.',
       body:
-        'Otvoren sam za frontend i full-stack pozicije, ugovorni rad i zanimljive projekte. Najbrže me dobijate na email.',
+        'Treba vam sajt, web aplikacija ili još jedan frontend developer u timu? Pišite mi šta pravite — najbrže me dobijate na email.',
       emailLabel: 'email',
       phoneLabel: 'telefon',
       githubLabel: 'github',

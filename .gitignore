@@ -4,3 +4,8 @@ node_modules/
 .DS_Store
 .env
 .env.production
+
+# Cloudflare Worker local state and dev-only secrets
+.wrangler/
+.dev.vars*
+worker/worker-configuration.d.ts

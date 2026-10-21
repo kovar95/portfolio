@@ -1,6 +1,7 @@
 ---
 import Section from './Section.astro';
 import styles from './Contact.module.css';
+import button from '../styles/Button.module.css';
 import { useContent, PROFILE, type Lang } from '../i18n/content';
 
 interface Props {
@@ -26,11 +27,11 @@ const channels = [
       <p class={styles.body}>{c.body}</p>
 
       <div class={styles.ctaRow}>
-        <a class={`${styles.btn} ${styles.btnPrimary}`} href={`mailto:${PROFILE.email}`}>
+        <a class={`${button.btn} ${button.btnPrimary}`} href={`mailto:${PROFILE.email}`}>
           {c.cta}
           <span aria-hidden="true">→</span>
         </a>
-        <a class={`${styles.btn} ${styles.btnGhost}`} href={PROFILE.cv} download>
+        <a class={`${button.btn} ${button.btnGhost}`} href={PROFILE.cv} download>
           {c.cvCta}
           <span aria-hidden="true">↓</span>
         </a>

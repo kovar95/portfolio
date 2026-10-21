@@ -216,7 +216,7 @@
 }
 
 .sheet[data-open='true'] {
-  max-height: 26rem;
+  max-height: 30rem;
   visibility: visible;
   border-top-color: var(--border);
   transition-delay: 0s, 0s, 0s;

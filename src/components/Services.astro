@@ -1,0 +1,41 @@
+---
+import Section from './Section.astro';
+import styles from './Services.module.css';
+import button from '../styles/Button.module.css';
+import { useContent, localePath, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const s = t.services;
+const page = localePath(lang, s.path);
+---
+
+<Section id="services" index={s.index} heading={s.heading}>
+  <div class={`${styles.panel} reveal`}>
+    <div>
+      <h3 class={styles.title}>{s.teaserTitle}</h3>
+      <p class={styles.body}>{s.teaserBody}</p>
+      <p class={styles.price}>
+        <span class={styles.priceLabel}>{s.priceLabel}</span>
+        <strong class={styles.priceValue}>{s.price}</strong>
+      </p>
+      <div class={styles.ctaRow}>
+        <a class={`${button.btn} ${button.btnPrimary}`} href={page}>
+          {s.teaserCta}
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class={`${button.btn} ${button.btnGhost}`} href={`${page}#inquiry`}>
+          {s.inquiryCta}
+        </a>
+      </div>
+    </div>
+
+    <ul class={styles.list}>
+      {s.items.map((item) => <li class={styles.item}>{item.title}</li>)}
+    </ul>
+  </div>
+</Section>

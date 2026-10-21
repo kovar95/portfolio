@@ -1,0 +1,198 @@
+---
+import styles from './InquiryForm.module.css';
+import button from '../styles/Button.module.css';
+import { useContent, PROFILE, type Lang } from '../i18n/content';
+
+interface Props {
+  lang: Lang;
+}
+
+/**
+ * Public Turnstile site key — safe to commit (the secret lives in the Worker).
+ * PUBLIC_TURNSTILE_SITE_KEY overrides it, e.g. with the test key
+ * 1x00000000000000000000AA for a local `wrangler dev` run.
+ */
+const TURNSTILE_SITE_KEY = '0x4AAAAAAFfHa6fZEIwkAmu5';
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || TURNSTILE_SITE_KEY;
+if (!siteKey) {
+  throw new Error('Set TURNSTILE_SITE_KEY in src/components/InquiryForm.astro (or PUBLIC_TURNSTILE_SITE_KEY).');
+}
+
+const { lang } = Astro.props;
+const t = useContent(lang);
+const s = t.services;
+const f = s.form;
+---
+
+<form
+  class={styles.form}
+  action="/api/inquiry"
+  method="post"
+  data-inquiry
+  data-sitekey={siteKey}
+  data-sending={f.sending}
+  data-success={f.success}
+  data-error-verification={f.errorVerification}
+  data-error-generic={`${f.errorGeneric} ${PROFILE.email}.`}
+>
+  <input type="hidden" name="lang" value={lang} />
+
+  <div class={styles.fields}>
+    <label class={styles.field}>
+      <span class={styles.label}>{f.name}</span>
+      <input class={styles.input} name="name" required maxlength="100" autocomplete="name" />
+    </label>
+
+    <label class={styles.field}>
+      <span class={styles.label}>{f.email}</span>
+      <input
+        class={styles.input}
+        type="email"
+        name="email"
+        required
+        maxlength="200"
+        autocomplete="email"
+      />
+    </label>
+
+    <label class={styles.field}>
+      <span class={styles.label}>
+        {f.phone} <span class={styles.optional}>({f.optional})</span>
+      </span>
+      <input class={styles.input} type="tel" name="phone" maxlength="40" autocomplete="tel" />
+    </label>
+
+    <label class={styles.field}>
+      <span class={styles.label}>{f.service}</span>
+      <select class={styles.input} name="service" required>
+        <option value="" disabled selected>{f.servicePlaceholder}</option>
+        {s.items.map((item) => <option>{item.title}</option>)}
+        <option>{f.serviceOther}</option>
+      </select>
+    </label>
+
+    <label class={`${styles.field} ${styles.full}`}>
+      <span class={styles.label}>{f.message}</span>
+      <textarea
+        class={styles.input}
+        name="message"
+        required
+        minlength="10"
+        maxlength="5000"
+        rows="6"
+        placeholder={f.messagePlaceholder}></textarea>
+    </label>
+  </div>
+
+  <div class={styles.turnstile} data-turnstile></div>
+
+  <div class={styles.actions}>
+    <button class={`${button.btn} ${button.btnPrimary}`} type="submit">{f.submit}</button>
+    <p class={styles.privacy}>{f.privacy}</p>
+  </div>
+
+  <p class={styles.status} role="status" aria-live="polite" data-status hidden></p>
+</form>
+
+<noscript>
+  <!-- is:inline keeps this inside <noscript>; a regular <style> would be hoisted and hide the form for everyone -->
+  <style is:inline>
+    [data-inquiry] {
+      display: none;
+    }
+  </style>
+  <p class={styles.noscript}>
+    {f.errorGeneric} <a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a>.
+  </p>
+</noscript>
+
+<script>
+  type Turnstile = {
+    render(container: HTMLElement, options: Record<string, unknown>): string;
+    reset(widgetId: string): void;
+  };
+
+  const SCRIPT = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+
+  let loading: Promise<Turnstile> | undefined;
+  const loadTurnstile = () =>
+    (loading ??= new Promise<Turnstile>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = SCRIPT;
+      script.async = true;
+      script.onload = () => {
+        const turnstile = (window as { turnstile?: Turnstile }).turnstile;
+        if (turnstile) resolve(turnstile);
+        else reject(new Error('Turnstile did not initialise'));
+      };
+      script.onerror = () => reject(new Error('Turnstile failed to load'));
+      document.head.append(script);
+    }));
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-inquiry]')) {
+    const holder = form.querySelector<HTMLElement>('[data-turnstile]')!;
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const { sitekey, sending, success, errorVerification, errorGeneric } = form.dataset;
+    let turnstile: Turnstile | undefined;
+    let widgetId: string | undefined;
+
+    const show = (text = '', kind: 'success' | 'error') => {
+      status.textContent = text;
+      status.dataset.kind = kind;
+      status.hidden = false;
+    };
+
+    /* Fetch the challenge only once the form is close to the viewport, so a
+       visit that never scrolls down to it doesn't pay for the script. */
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        try {
+          turnstile = await loadTurnstile();
+          widgetId = turnstile.render(holder, {
+            sitekey,
+            action: 'inquiry',
+            theme: 'dark',
+            size: 'flexible',
+          });
+        } catch {
+          show(errorGeneric, 'error');
+        }
+      },
+      { rootMargin: '400px' },
+    );
+    observer.observe(form);
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const label = submit.textContent;
+      submit.disabled = true;
+      submit.textContent = sending ?? label;
+      status.hidden = true;
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        const result: { ok?: boolean; error?: string } = await response.json().catch(() => ({}));
+        if (response.ok && result.ok) {
+          form.reset();
+          show(success, 'success');
+        } else {
+          show(result.error === 'verification' ? errorVerification : errorGeneric, 'error');
+        }
+      } catch {
+        show(errorGeneric, 'error');
+      } finally {
+        submit.disabled = false;
+        submit.textContent = label;
+        /* Turnstile tokens are single-use: a retry needs a fresh one. */
+        if (turnstile && widgetId) turnstile.reset(widgetId);
+      }
+    });
+  }
+</script>

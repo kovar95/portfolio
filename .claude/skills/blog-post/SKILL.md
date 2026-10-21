@@ -108,7 +108,9 @@ Offer to show the full text of either version. Then ask whether to publish. Publ
 3. Stage only the post: `git add src/content/blog/<slug>/`. Never use `git add -A` or `.`, because the user may have unrelated work in progress, including `.claude/` files.
 4. Commit with the message `Add blog post: <English title>`, followed by the session's usual commit attribution lines.
 5. Push with `git push origin main`.
-6. Tell the user the live URLs and that Cloudflare needs a minute or two to deploy.
+6. Check that the post is actually live. Don't assume the push deployed it: on 2026-10-21 pushes had silently stopped deploying for weeks. Request `https://kovar95.dev/blog/<slug>/` with a cache-busting query (`?v=$RANDOM`) and expect a 200. Workers Builds normally takes a minute or two, so retry for up to ~5 minutes.
+7. If it is still 404 after that, deploy by hand from the clean `main` checkout: `rm -rf dist && npm run deploy`. Then check again, and tell the user the automatic deploy did not run so they can look at Workers & Pages → portfolio → Settings → Builds.
+8. Report the live URLs only after they return 200.
 
 **Drafts**: write and validate the files, but do not commit unless the user asks. To publish a draft later, remove the `draft: true` line from both files, refresh `date`, then repeat steps 6–8.
 

@@ -4,15 +4,31 @@
   "compatibility_date": "2026-09-01",
 
   /**
-   * Assets-only Worker: there is no `main` script, Cloudflare just serves the
-   * built static site from the edge.
+   * The site itself is static: Cloudflare serves ./dist straight from the edge.
+   * The only code is worker/index.ts, and run_worker_first limits it to /api/*
+   * (the services inquiry form), so page views never invoke it.
    *
    * not_found_handling serves our own /404.html instead of a bare Cloudflare
    * error page. html_handling defaults to "auto-trailing-slash", which is what
    * maps /sr/ to /sr/index.html.
    */
+  "main": "worker/index.ts",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
-  }
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+
+  /**
+   * Inquiries go to a verified Email Routing destination, which is free on
+   * every plan. The address itself is the INQUIRY_TO secret, so it stays out
+   * of this public repo. TURNSTILE_SECRET is a secret too.
+   */
+  "send_email": [{ "name": "MAILER", "allowed_sender_addresses": ["website@kovar95.dev"] }],
+  "vars": {
+    "TURNSTILE_HOSTNAMES": "kovar95.dev"
+  },
+
+  "observability": { "enabled": true }
 }
